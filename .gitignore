@@ -1,0 +1,18 @@
+# Установки Python
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mac OS
+.DS_Store
+
+# Среды разработки
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Конфигурации и секреты (понадобятся на следующем этапе)
+.env
