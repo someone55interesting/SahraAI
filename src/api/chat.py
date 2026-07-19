@@ -1,5 +1,7 @@
 import asyncio
 import jwt
+import json
+import httpx
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
@@ -16,20 +18,20 @@ from loguru import logger
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
+# ИСПОЛЬЗУЕМ ЭНДПОИНТ ЧАТА, ЧТОБЫ ПЕРЕДАВАТЬ ИСТОРИЮ
+OLLAMA_URL = "http://localhost:11434/api/chat"
+MODEL_NAME = "llama3.1"
+
 @router.get("/conversations", response_model=List[ConversationResponse])
 async def get_conversations(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    """Получить список всех диалогов пользователя."""
     return await conversation_repo.get_user_conversations(db, current_user.id)
-
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationDetail)
 async def get_conversation(conversation_id: int, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    """Получить историю конкретного диалога."""
     conv = await conversation_repo.get_conversation_with_messages(db, conversation_id, current_user.id)
     if not conv:
         raise AppError("Conversation not found", status_code=404)
     return conv
-
 
 @router.websocket("/ws/{conversation_id}")
 async def websocket_chat(
@@ -38,13 +40,8 @@ async def websocket_chat(
     token: str = Query(...), 
     db: AsyncSession = Depends(get_db)
 ):
-    """
-    WebSocket эндпоинт для чата с AI.
-    Если conversation_id = 0, создается новый диалог.
-    """
     await websocket.accept()
     
-    # 1. Авторизация (в WebSocket токены передаются через URL)
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user = await user_repository.get_by_email(db, payload.get("sub"))
@@ -56,46 +53,51 @@ async def websocket_chat(
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
         
-    # 2. Поиск или создание диалога
     if conversation_id == 0:
         conv = await conversation_repo.create(db, {"user_id": user.id, "title": "Новый чат"})
+        chat_history = []
     else:
         conv = await conversation_repo.get_conversation_with_messages(db, conversation_id, user.id)
         if not conv:
             await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
             return
+        # Загружаем старые сообщения из базы в память Ollama
+        chat_history = [{"role": msg.role, "content": msg.content} for msg in conv.messages]
             
-    # 3. Основной цикл общения
     try:
         while True:
-            # Ждем сообщение от пользователя
             user_text = await websocket.receive_text()
             
-            # Сохраняем в БД
-            await message_repo.create(db, {
-                "conversation_id": conv.id,
-                "role": "user",
-                "content": user_text
-            })
+            await message_repo.create(db, {"conversation_id": conv.id, "role": "user", "content": user_text})
+            chat_history.append({"role": "user", "content": user_text})
             
-            # TODO: На ЭТАПЕ 4 здесь будет вызов реальной модели AI.
-            # Пока делаем заглушку, которая имитирует "раздумья" и стриминг текста.
-            mock_ai_response = f"Привет! Я Sahra AI. Я получила твое сообщение: «{user_text}». Скоро ко мне подключат настоящий мозг!"
+            full_response = ""
             
-            # Стримим ответ по одной букве (имитация генерации)
-            for char in mock_ai_response:
-                await websocket.send_text(char)
-                await asyncio.sleep(0.02) # Небольшая задержка
+            try:
+                async with httpx.AsyncClient() as client:
+                    async with client.stream(
+                        "POST", 
+                        OLLAMA_URL, 
+                        json={"model": MODEL_NAME, "messages": chat_history, "stream": True},
+                        timeout=None
+                    ) as response:
+                        async for line in response.aiter_lines():
+                            if line:
+                                data = json.loads(line)
+                                # Для /api/chat ответ лежит в message -> content
+                                chunk = data.get("message", {}).get("content", "")
+                                full_response += chunk
+                                await websocket.send_text(chunk)
+                                
+            except Exception as e:
+                logger.error(f"Ollama connection error: {e}")
+                await websocket.send_text("\n[Ошибка подключения к ИИ]")
                 
-            # Отправляем специальный сигнал, что генерация завершена
             await websocket.send_text("[DONE]")
             
-            # Сохраняем ответ ИИ в базу
-            await message_repo.create(db, {
-                "conversation_id": conv.id,
-                "role": "assistant",
-                "content": mock_ai_response
-            })
+            if full_response:
+                await message_repo.create(db, {"conversation_id": conv.id, "role": "assistant", "content": full_response})
+                chat_history.append({"role": "assistant", "content": full_response})
             
     except WebSocketDisconnect:
         logger.info(f"User {user.email} disconnected from chat {conv.id}")

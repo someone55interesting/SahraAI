@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Sahra AI - Test Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans min-h-screen flex flex-col items-center p-10">
+
+    <div class="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700 flex flex-col h-[80vh]">
+        
+        <!-- Заголовок -->
+        <div class="bg-gray-900/50 backdrop-blur border-b border-gray-700 p-4">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Sahra AI v1.0</h1>
+            <input id="tokenInput" type="password" placeholder="Вставь сюда свой Access Token из Swagger" class="mt-2 w-full bg-gray-700 text-sm p-2 rounded outline-none border border-gray-600 focus:border-blue-500">
+        </div>
+
+        <!-- Окно чата -->
+        <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4">
+            <!-- Сообщения будут появляться здесь -->
+        </div>
+
+        <!-- Ввод -->
+        <div class="p-4 bg-gray-900 border-t border-gray-700 flex gap-2">
+            <input id="messageInput" type="text" placeholder="Напиши что-нибудь..." class="flex-1 bg-gray-700 p-3 rounded-lg outline-none border border-gray-600 focus:border-blue-500" disabled>
+            <button id="sendBtn" class="bg-blue-600 hover:bg-blue-500 transition px-6 py-3 rounded-lg font-semibold disabled:opacity-50" disabled>Отправить</button>
+        </div>
+    </div>
+
+    <script>
+        const tokenInput = document.getElementById('tokenInput');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatBox = document.getElementById('chatBox');
+        
+        let ws = null;
+        let currentAssistantMessage = null; // Элемент для стриминга букв
+
+        // Как только ввели токен - открываем соединение
+        tokenInput.addEventListener('change', () => {
+            const token = tokenInput.value;
+            if (!token) return;
+
+            // conversation_id = 0 означает создание нового чата
+            ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws/0?token=${token}`);
+
+            ws.onopen = () => {
+                appendMessage('system', 'Соединение установлено. Sahra AI готова.');
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+            };
+
+            ws.onmessage = (event) => {
+                const data = event.data;
+                
+                // Если пришел сигнал [DONE], значит генерация завершена
+                if (data === '[DONE]') {
+                    currentAssistantMessage = null;
+                    return;
+                }
+
+                // Если это первое слово от ИИ, создаем блок сообщения
+                if (!currentAssistantMessage) {
+                    currentAssistantMessage = appendMessage('assistant', '');
+                }
+
+                // Добавляем пришедшие буквы
+                currentAssistantMessage.textContent += data;
+                chatBox.scrollTop = chatBox.scrollHeight; // Автоскролл
+            };
+
+            ws.onclose = () => {
+                appendMessage('system', 'Соединение закрыто (проверь токен или сервер).');
+            };
+        });
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            const isUser = role === 'user';
+            const isSystem = role === 'system';
+            
+            div.className = `max-w-[80%] p-3 rounded-xl ${
+                isUser ? 'bg-blue-600 ml-auto' : 
+                isSystem ? 'bg-gray-700 text-gray-400 text-center mx-auto text-sm' : 
+                'bg-gray-700 mr-auto'
+            }`;
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return div;
+        }
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !ws) return;
+            
+            appendMessage('user', text);
+            ws.send(text);
+            messageInput.value = '';
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
