@@ -15,12 +15,19 @@ from src.repositories.user_repo import user_repository
 from src.core.config import settings
 from src.core.exceptions import AppError
 from loguru import logger
+from src.repositories.memory_repo import memory_repo
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
-# ИСПОЛЬЗУЕМ ЭНДПОИНТ ЧАТА, ЧТОБЫ ПЕРЕДАВАТЬ ИСТОРИЮ
-OLLAMA_URL = "http://localhost:11434/api/chat"
+OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
+OLLAMA_GENERATE_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "llama3.1"
+
+# НАСТРОЙКА ХАРАКТЕРА (SYSTEM PROMPT)
+# Можешь менять этот текст, чтобы Sahra AI общалась иначе (например, как программист, пират или Тони Старк).
+SYSTEM_PROMPT = """Ты — Sahra AI, высокоинтеллектуальный, проницательный и слегка дерзкий ассистент. 
+Твои ответы всегда точные, структурированные и без лишней воды. 
+Ты общаешься уверенно, как эксперт топ-уровня. Не используй банальные приветствия."""
 
 @router.get("/conversations", response_model=List[ConversationResponse])
 async def get_conversations(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
@@ -42,6 +49,7 @@ async def websocket_chat(
 ):
     await websocket.accept()
     
+    # 1. Авторизация
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user = await user_repository.get_by_email(db, payload.get("sub"))
@@ -53,17 +61,36 @@ async def websocket_chat(
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
         
+        # --- МАГИЯ ПАМЯТИ ---
+    # Достаем все факты о пользователе из БД
+    user_memories = await memory_repo.get_user_memories(db, user.id)
+    memory_facts = "\n".join([f"- {m.fact}" for m in user_memories])
+    
+    # Формируем динамический промпт
+    dynamic_prompt = SYSTEM_PROMPT
+    if memory_facts:
+        dynamic_prompt += f"\n\nВАЖНО! Факты об этом пользователе, которые ты обязана учитывать в ответах:\n{memory_facts}"
+
+    # 2. Поиск или создание диалога
+    is_new_chat = False
+    
     if conversation_id == 0:
         conv = await conversation_repo.create(db, {"user_id": user.id, "title": "Новый чат"})
-        chat_history = []
+        # Используем динамический промпт с памятью
+        chat_history = [{"role": "system", "content": dynamic_prompt}]
+        is_new_chat = True
     else:
         conv = await conversation_repo.get_conversation_with_messages(db, conversation_id, user.id)
         if not conv:
             await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
             return
-        # Загружаем старые сообщения из базы в память Ollama
-        chat_history = [{"role": msg.role, "content": msg.content} for msg in conv.messages]
+        
+        chat_history = [{"role": "system", "content": dynamic_prompt}]
+        chat_history += [{"role": msg.role, "content": msg.content} for msg in conv.messages]
+
+    
             
+    # 3. Основной цикл общения
     try:
         while True:
             user_text = await websocket.receive_text()
@@ -73,18 +100,18 @@ async def websocket_chat(
             
             full_response = ""
             
+            # --- СТРИМИНГ ОТВЕТА ---
             try:
                 async with httpx.AsyncClient() as client:
                     async with client.stream(
                         "POST", 
-                        OLLAMA_URL, 
+                        OLLAMA_CHAT_URL, 
                         json={"model": MODEL_NAME, "messages": chat_history, "stream": True},
                         timeout=None
                     ) as response:
                         async for line in response.aiter_lines():
                             if line:
                                 data = json.loads(line)
-                                # Для /api/chat ответ лежит в message -> content
                                 chunk = data.get("message", {}).get("content", "")
                                 full_response += chunk
                                 await websocket.send_text(chunk)
@@ -98,6 +125,29 @@ async def websocket_chat(
             if full_response:
                 await message_repo.create(db, {"conversation_id": conv.id, "role": "assistant", "content": full_response})
                 chat_history.append({"role": "assistant", "content": full_response})
+                
+            # --- АВТОГЕНЕРАЦИЯ ЗАГОЛОВКА ---
+            # Если это был первый вопрос в новом чате, придумываем ему красивое название
+            if is_new_chat:
+                try:
+                    async with httpx.AsyncClient() as client:
+                        title_prompt = f"Напиши очень краткий заголовок (2-3 слова) для чата, который начинается с фразы: «{user_text}». Напиши ТОЛЬКО заголовок, без кавычек, точек и пояснений."
+                        resp = await client.post(
+                            OLLAMA_GENERATE_URL, 
+                            json={"model": MODEL_NAME, "prompt": title_prompt, "stream": False},
+                            timeout=10.0
+                        )
+                        new_title = resp.json().get("response", "").strip(' \n".')
+                        
+                        if new_title:
+                            conv.title = new_title
+                            await db.commit()
+                            logger.success(f"Новый заголовок чата #{conv.id}: {new_title}")
+                except Exception as e:
+                    logger.error(f"Ошибка генерации заголовка: {e}")
+                
+                # Выключаем флаг, чтобы не генерировать заголовок при следующих сообщениях
+                is_new_chat = False
             
     except WebSocketDisconnect:
         logger.info(f"User {user.email} disconnected from chat {conv.id}")

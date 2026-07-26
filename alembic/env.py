@@ -12,7 +12,7 @@ from src.db.database import Base
 # ВАЖНО: Импортируем модели, чтобы Alembic "увидел" их при генерации миграции
 from src.models.user import User, Profile
 from src.models.chat import Conversation, Message # <-- Добавили эту строку
-
+from src.models.memory import UserMemory
 
 # Это объект конфигурации Alembic
 config = context.config
