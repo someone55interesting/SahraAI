@@ -19,3 +19,11 @@ class BaseRepository(Generic[ModelType]):
         await db.commit()
         await db.refresh(db_obj)
         return db_obj
+    async def delete(self, db: AsyncSession, id: Any) -> bool:
+        """Универсальное удаление записи по ID."""
+        obj = await self.get_by_id(db, id)
+        if obj:
+            await db.delete(obj)
+            await db.commit()
+            return True
+        return False
