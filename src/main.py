@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import auth, chat, memory, youtube, search
+from src.api import auth, chat, memory, youtube, search, documents
 from src.core.logger import setup_logger
 from src.core.exceptions import AppError, app_error_handler
 
@@ -13,6 +13,7 @@ app.include_router(chat.router)  # <-- Добавили роутер для ча
 app.include_router(memory.router)
 app.include_router(youtube.router)
 app.include_router(search.router)
+app.include_router(documents.router)
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
