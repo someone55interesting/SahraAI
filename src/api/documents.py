@@ -7,13 +7,13 @@ from src.models.user import User
 from src.core.exceptions import AppError
 from src.schemas.documents import DocumentAskRequest, DocumentAskResponse
 from loguru import logger
-
+from src.api.deps import RateLimiter
 router = APIRouter(prefix="/documents", tags=["Documents AI"])
 
 OLLAMA_GENERATE_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "llama3.1"
 
-@router.post("/upload")
+@router.post("/upload", dependencies=[Depends(RateLimiter(times=3, seconds=60))])
 async def upload_document(
     file: UploadFile = File(...),
     current_user: User = Depends(get_current_user)
@@ -37,7 +37,7 @@ async def upload_document(
         "content_length": text_length
     }
 
-@router.post("/ask", response_model=DocumentAskResponse)
+@router.post("/ask", response_model=DocumentAskResponse, dependencies=[Depends(RateLimiter(times=3, seconds=60))])
 async def ask_document(
     request: DocumentAskRequest,
     current_user: User = Depends(get_current_user)

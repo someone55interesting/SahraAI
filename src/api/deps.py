@@ -10,6 +10,9 @@ from src.db.database import get_db
 from src.models.user import User
 from src.repositories.user_repo import user_repository
 
+
+from fastapi import Request
+from src.core.exceptions import AppError
 # Говорим FastAPI, где находится эндпоинт для логина
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -33,3 +36,31 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
         raise AppError("User not found", status_code=status.HTTP_404_NOT_FOUND)
         
     return user
+
+class RateLimiter:
+    """
+    Кастомный Rate Limiter. 
+    Ограничивает количество запросов к эндпоинту за определенное время.
+    """
+    def __init__(self, times: int, seconds: int):
+        self.times = times
+        self.seconds = seconds
+
+    async def __call__(self, request: Request, current_user: User = Depends(get_current_user)):
+        # Получаем глобальный клиент Redis из приложения
+        redis_client = request.app.state.redis
+        
+        # Формируем уникальный ключ: например rate_limit:5:/search/
+        key = f"rate_limit:{current_user.id}:{request.url.path}"
+        
+        # Увеличиваем счетчик запросов для этого ключа (Redis сам создаст ключ, если его нет)
+        current_requests = await redis_client.incr(key)
+        
+        # Если это первый запрос, ставим таймер (сколько секунд ключ будет жить)
+        if current_requests == 1:
+            await redis_client.expire(key, self.seconds)
+            
+        # Если лимит превышен — отбиваем с ошибкой 429
+        if current_requests > self.times:
+            logger.warning(f"Юзер {current_user.email} превысил лимит запросов на {request.url.path}")
+            raise AppError("Слишком много запросов. Подождите немного.", status_code=429)

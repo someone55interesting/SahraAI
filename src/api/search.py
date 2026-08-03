@@ -1,5 +1,6 @@
 import httpx
 from fastapi import APIRouter, Depends
+from pyrate_limiter import limiter
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.schemas.search import WebSearchRequest, WebSearchResponse
@@ -8,13 +9,14 @@ from src.api.deps import get_current_user
 from src.models.user import User
 from src.core.exceptions import AppError
 from loguru import logger
+from src.api.deps import RateLimiter
 
 router = APIRouter(prefix="/search", tags=["Internet AI"])
 
 OLLAMA_GENERATE_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "llama3.1"
 
-@router.post("/", response_model=WebSearchResponse)
+@router.post("/", response_model=WebSearchResponse, dependencies=[Depends(RateLimiter(times=3, seconds=60))])
 async def web_search_ai(request: WebSearchRequest, current_user: User = Depends(get_current_user)):
     logger.info(f"Юзер {current_user.email} ищет в интернете: {request.query}")
     
