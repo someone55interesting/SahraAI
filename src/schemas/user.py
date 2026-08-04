@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional
 from datetime import datetime
 
@@ -11,14 +11,13 @@ class UserCreate(BaseModel):
 
 class UserResponse(BaseModel):
     """Схема для отправки данных пользователя обратно клиенту (без пароля)."""
+    # Новая конфигурация Pydantic v2 для работы с моделями SQLAlchemy
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     email: EmailStr
     is_active: bool
     created_at: datetime
-
-    class Config:
-        # Позволяет Pydantic читать данные напрямую из моделей SQLAlchemy
-        from_attributes = True
 
 class Token(BaseModel):
     """Схема для выдачи токена при входе."""
