@@ -10,7 +10,7 @@ class VectorDBService:
         
         # Подключаем Ollama для перевода текста в векторы
         self.embedding_fn = embedding_functions.OllamaEmbeddingFunction(
-            url="http://localhost:11434/api/embeddings",
+            url="http://host.docker.internal:11434/api/embeddings",
             model_name="nomic-embed-text"
         )
         

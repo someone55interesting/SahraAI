@@ -20,8 +20,8 @@ from src.repositories.memory_repo import memory_repo
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
-OLLAMA_CHAT_URL = "http://localhost:11434/api/chat"
-OLLAMA_GENERATE_URL = "http://localhost:11434/api/generate"
+OLLAMA_CHAT_URL = "http://host.docker.internal:11434/api/chat"
+OLLAMA_GENERATE_URL = "http://host.docker.internal:11434/api/generate"
 MODEL_NAME = "llama3.1"
 
 # НАСТРОЙКА ХАРАКТЕРА (SYSTEM PROMPT)

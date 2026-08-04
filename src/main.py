@@ -15,7 +15,7 @@ async def lifespan(app: FastAPI):
     app.state.redis = redis.from_url(settings.REDIS_URL, encoding="utf-8", decode_responses=True)
     
     # Пул соединений для отправки задач в очередь
-    app.state.arq_pool = await create_pool(RedisSettings(host="localhost", port=6379))
+    app.state.arq_pool = await create_pool(RedisSettings(host="redis", port=6379))
     logger.success("Redis и ARQ успешно подключены!")
     
     yield

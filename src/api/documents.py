@@ -10,7 +10,7 @@ from loguru import logger
 from src.api.deps import RateLimiter
 router = APIRouter(prefix="/documents", tags=["Documents AI"])
 
-OLLAMA_GENERATE_URL = "http://localhost:11434/api/generate"
+OLLAMA_GENERATE_URL = "http://host.docker.internal:11434/api/generate"
 MODEL_NAME = "llama3.1"
 
 @router.post("/upload", dependencies=[Depends(RateLimiter(times=3, seconds=60))])

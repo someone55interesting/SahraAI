@@ -20,4 +20,4 @@ async def process_heavy_ai_task(ctx, task_name: str, user_id: int):
 class WorkerSettings:
     functions = [process_heavy_ai_task]
     # Используем наш хост и порт из конфигов
-    redis_settings = RedisSettings(host="localhost", port=6379)
+    redis_settings = RedisSettings(host="redis", port=6379)
