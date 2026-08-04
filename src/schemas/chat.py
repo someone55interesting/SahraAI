@@ -1,6 +1,6 @@
-from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
+from pydantic import BaseModel
 
 class MessageResponse(BaseModel):
     """Схема отдельного сообщения (отправляем клиенту)."""
@@ -24,3 +24,5 @@ class ConversationResponse(BaseModel):
 class ConversationDetail(ConversationResponse):
     """Схема диалога вместе со всеми его сообщениями (когда открываем чат)."""
     messages: List[MessageResponse] = []
+
+

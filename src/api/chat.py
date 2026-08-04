@@ -9,7 +9,8 @@ from typing import List
 from src.db.database import get_db
 from src.models.user import User
 from src.api.deps import get_current_user
-from src.schemas.chat import ConversationResponse, ConversationDetail
+from src.schemas.chat import ConversationResponse, ConversationDetail, MessageResponse
+from src.schemas.pagination import Page  # Импортируем нашу новую Generic-схему
 from src.repositories.chat_repo import conversation_repo, message_repo
 from src.repositories.user_repo import user_repository
 from src.core.config import settings
@@ -24,7 +25,6 @@ OLLAMA_GENERATE_URL = "http://localhost:11434/api/generate"
 MODEL_NAME = "llama3.1"
 
 # НАСТРОЙКА ХАРАКТЕРА (SYSTEM PROMPT)
-# Можешь менять этот текст, чтобы Sahra AI общалась иначе (например, как программист, пират или Тони Старк).
 SYSTEM_PROMPT = """You are Sahra AI, an elite, hyper-intelligent artificial intelligence assistant. Your core architecture is optimized for absolute precision, deep multi-domain knowledge, and flawless multilingual communication.
 
 1. IDENTITY & CORE CAPABILITIES:
@@ -41,16 +41,49 @@ SYSTEM_PROMPT = """You are Sahra AI, an elite, hyper-intelligent artificial inte
 Never break character. You are Sahra AI: infinite knowledge, absolute precision.
 """
 
-@router.get("/conversations", response_model=List[ConversationResponse])
-async def get_conversations(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    return await conversation_repo.get_user_conversations(db, current_user.id)
+@router.get("/conversations", response_model=Page[ConversationResponse])
+async def get_conversations(
+    page: int = Query(1, ge=1, description="Номер страницы"),
+    size: int = Query(20, ge=1, le=100, description="Количество элементов на странице"),
+    current_user: User = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    """Возвращает список чатов (сайдбар) с пагинацией."""
+    items, total = await conversation_repo.get_user_conversations_paginated(db, current_user.id, page, size)
+    # Используем фабричный метод для красивого ответа
+    return Page.create(items=items, total=total, page=page, size=size)
+
+
+@router.get("/conversations/{conversation_id}/messages", response_model=Page[MessageResponse])
+async def get_conversation_messages(
+    conversation_id: int,
+    page: int = Query(1, ge=1, description="Номер страницы (1 - самые последние сообщения)"),
+    size: int = Query(50, ge=1, le=100, description="Количество сообщений на страницу"),
+    current_user: User = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Возвращает историю переписки конкретного чата.
+    Используется фронтендом для "бесконечного скролла" истории вверх.
+    """
+    # 1. Сначала проверяем, что чат принадлежит текущему юзеру (безопасность!)
+    conv = await conversation_repo.get_by_id(db, conversation_id)
+    if not conv or conv.user_id != current_user.id:
+        raise AppError("Conversation not found", status_code=404)
+        
+    # 2. Получаем страницу сообщений
+    items, total = await message_repo.get_conversation_messages_paginated(db, conversation_id, page, size)
+    return Page.create(items=items, total=total, page=page, size=size)
+
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationDetail)
 async def get_conversation(conversation_id: int, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Получает весь чат целиком."""
     conv = await conversation_repo.get_conversation_with_messages(db, conversation_id, current_user.id)
     if not conv:
         raise AppError("Conversation not found", status_code=404)
     return conv
+
 
 @router.websocket("/ws/{conversation_id}")
 async def websocket_chat(
@@ -73,12 +106,10 @@ async def websocket_chat(
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
         
-        # --- МАГИЯ ПАМЯТИ ---
-    # Достаем все факты о пользователе из БД
+    # --- МАГИЯ ПАМЯТИ ---
     user_memories = await memory_repo.get_user_memories(db, user.id)
     memory_facts = "\n".join([f"- {m.fact}" for m in user_memories])
     
-    # Формируем динамический промпт
     dynamic_prompt = SYSTEM_PROMPT
     if memory_facts:
         dynamic_prompt += f"\n\nВАЖНО! Факты об этом пользователе, которые ты обязана учитывать в ответах:\n{memory_facts}"
@@ -88,7 +119,6 @@ async def websocket_chat(
     
     if conversation_id == 0:
         conv = await conversation_repo.create(db, {"user_id": user.id, "title": "Новый чат"})
-        # Используем динамический промпт с памятью
         chat_history = [{"role": "system", "content": dynamic_prompt}]
         is_new_chat = True
     else:
@@ -100,8 +130,6 @@ async def websocket_chat(
         chat_history = [{"role": "system", "content": dynamic_prompt}]
         chat_history += [{"role": msg.role, "content": msg.content} for msg in conv.messages]
 
-    
-            
     # 3. Основной цикл общения
     try:
         while True:
@@ -139,7 +167,6 @@ async def websocket_chat(
                 chat_history.append({"role": "assistant", "content": full_response})
                 
             # --- АВТОГЕНЕРАЦИЯ ЗАГОЛОВКА ---
-            # Если это был первый вопрос в новом чате, придумываем ему красивое название
             if is_new_chat:
                 try:
                     async with httpx.AsyncClient() as client:
@@ -158,8 +185,9 @@ async def websocket_chat(
                 except Exception as e:
                     logger.error(f"Ошибка генерации заголовка: {e}")
                 
-                # Выключаем флаг, чтобы не генерировать заголовок при следующих сообщениях
                 is_new_chat = False
             
     except WebSocketDisconnect:
         logger.info(f"User {user.email} disconnected from chat {conv.id}")
+
+
