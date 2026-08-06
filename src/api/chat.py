@@ -20,9 +20,8 @@ from src.repositories.memory_repo import memory_repo
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
-OLLAMA_CHAT_URL = "http://host.docker.internal:11434/api/chat"
-OLLAMA_GENERATE_URL = "http://host.docker.internal:11434/api/generate"
-MODEL_NAME = "llama3.1"
+OLLAMA_CHAT_URL = f"{settings.OLLAMA_URL}/api/chat"
+OLLAMA_GENERATE_URL = F"{settings.OLLAMA_MODEL}/api/generate"
 
 # НАСТРОЙКА ХАРАКТЕРА (SYSTEM PROMPT)
 SYSTEM_PROMPT = """You are Sahra AI, an elite, hyper-intelligent artificial intelligence assistant. Your core architecture is optimized for absolute precision, deep multi-domain knowledge, and flawless multilingual communication.
@@ -146,7 +145,7 @@ async def websocket_chat(
                     async with client.stream(
                         "POST", 
                         OLLAMA_CHAT_URL, 
-                        json={"model": MODEL_NAME, "messages": chat_history, "stream": True},
+                        json={"model": settings.OLLAMA_MODEL, "messages": chat_history, "stream": True},
                         timeout=None
                     ) as response:
                         async for line in response.aiter_lines():
@@ -173,7 +172,7 @@ async def websocket_chat(
                         title_prompt = f"Напиши очень краткий заголовок (2-3 слова) для чата, который начинается с фразы: «{user_text}». Напиши ТОЛЬКО заголовок, без кавычек, точек и пояснений."
                         resp = await client.post(
                             OLLAMA_GENERATE_URL, 
-                            json={"model": MODEL_NAME, "prompt": title_prompt, "stream": False},
+                            json={"model": settings.OLLAMA_MODEL, "prompt": title_prompt, "stream": False},
                             timeout=10.0
                         )
                         new_title = resp.json().get("response", "").strip(' \n".')

@@ -10,10 +10,11 @@ from src.models.user import User
 from src.core.exceptions import AppError
 from loguru import logger
 
+from src.core.config import settings
+
 router = APIRouter(prefix="/youtube", tags=["YouTube AI"])
 
-OLLAMA_GENERATE_URL = "http://host.docker.internal:11434/api/generate"
-MODEL_NAME = "llama3.1"
+OLLAMA_GENERATE_URL = f"{settings.OLLAMA_URL}/api/generate"
 CHUNK_SIZE = 12000 # Безопасный размер для контекстного окна Llama 3.1 8B
 
 async def ask_ollama(prompt: str, timeout: float = 120.0) -> str:
@@ -22,7 +23,7 @@ async def ask_ollama(prompt: str, timeout: float = 120.0) -> str:
         async with httpx.AsyncClient() as client:
             resp = await client.post(
                 OLLAMA_GENERATE_URL, 
-                json={"model": MODEL_NAME, "prompt": prompt, "stream": False},
+                json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
                 timeout=timeout
             )
             

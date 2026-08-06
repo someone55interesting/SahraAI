@@ -1,0 +1,2497 @@
+
+
+=== ФАЙЛ: ./requirements.txt ===
+aiohappyeyeballs==2.7.1
+aiohttp==3.14.3
+aiosignal==1.4.0
+alembic==1.18.5
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.14.2
+arq==0.28.0
+asyncpg==0.31.0
+attrs==26.1.0
+bcrypt==4.0.1
+build==1.5.0
+certifi==2026.6.17
+charset-normalizer==3.4.9
+chromadb==1.5.9
+click==8.4.2
+defusedxml==0.7.1
+dnspython==2.8.0
+duckduckgo_search==8.1.1
+durationpy==0.10
+email-validator==2.3.0
+fastapi==0.139.2
+filelock==3.32.2
+flatbuffers==25.12.19
+frozenlist==1.8.0
+fsspec==2026.7.0
+googleapis-common-protos==1.75.0
+greenlet==3.5.3
+grpcio==1.83.0
+h11==0.16.0
+hf-xet==1.5.2
+hiredis==3.4.0
+httpcore==1.0.9
+httptools==0.8.0
+httpx==0.28.1
+huggingface_hub==1.26.0
+idna==3.18
+importlib_resources==7.1.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+kubernetes==36.0.3
+loguru==0.7.3
+lxml==6.1.1
+Mako==1.3.12
+markdown-it-py==4.2.0
+MarkupSafe==3.0.3
+mdurl==0.1.2
+mmh3==5.2.1
+multidict==6.7.1
+numpy>=1.26.0
+oauthlib==3.3.1
+ollama==0.6.2
+onnxruntime==1.28.0
+opentelemetry-api==1.44.0
+opentelemetry-exporter-otlp-proto-common==1.44.0
+opentelemetry-exporter-otlp-proto-grpc==1.44.0
+opentelemetry-proto==1.44.0
+opentelemetry-sdk==1.44.0
+opentelemetry-semantic-conventions==0.65b0
+orjson==3.11.9
+overrides==7.7.0
+packaging==26.2
+passlib==1.7.4
+primp==1.3.1
+propcache==0.5.2
+protobuf==7.35.1
+pybase64==1.4.3
+pydantic==2.13.4
+pydantic-settings==2.14.2
+pydantic_core==2.46.4
+Pygments==2.20.0
+PyJWT==2.13.0
+pymupdf==1.28.0
+PyPika==0.51.1
+pyproject_hooks==1.2.0
+pyrate-limiter==4.4.0
+python-dateutil==2.9.0.post0
+python-docx==1.2.0
+python-dotenv==1.2.2
+python-multipart==0.0.32
+PyYAML==6.0.3
+redis==5.3.1
+referencing==0.37.0
+requests==2.34.2
+requests-oauthlib==2.0.0
+rich==15.0.0
+rpds-py==2026.6.3
+shellingham==1.5.4
+six==1.17.0
+SQLAlchemy==2.0.51
+starlette==1.3.1
+tenacity==9.1.4
+tokenizers==0.23.1
+tqdm==4.70.0
+typer==0.27.0
+typing-inspection==0.4.2
+typing_extensions==4.16.0
+urllib3==2.7.0
+uvicorn==0.51.0
+uvloop==0.22.1
+watchfiles==1.2.0
+websocket-client==1.9.0
+websockets==16.1.1
+yarl==1.24.5
+youtube-transcript-api==1.2.4
+
+
+=== ФАЙЛ: ./alembic.ini ===
+# A generic, single database configuration.
+
+[alembic]
+# path to migration scripts.
+# this is typically a path given in POSIX (e.g. forward slashes)
+# format, relative to the token %(here)s which refers to the location of this
+# ini file
+script_location = %(here)s/alembic
+
+# template used to generate migration file names; The default value is %%(rev)s_%%(slug)s
+# Uncomment the line below if you want the files to be prepended with date and time
+# see https://alembic.sqlalchemy.org/en/latest/tutorial.html#editing-the-ini-file
+# for all available tokens
+# file_template = %%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s
+# Or organize into date-based subdirectories (requires recursive_version_locations = true)
+# file_template = %%(year)d/%%(month).2d/%%(day).2d_%%(hour).2d%%(minute).2d_%%(second).2d_%%(rev)s_%%(slug)s
+
+# sys.path path, will be prepended to sys.path if present.
+# defaults to the current working directory.  for multiple paths, the path separator
+# is defined by "path_separator" below.
+prepend_sys_path = .
+
+# timezone to use when rendering the date within the migration file
+# as well as the filename.
+# If specified, requires the tzdata library which can be installed by adding
+# `alembic[tz]` to the pip requirements.
+# string value is passed to ZoneInfo()
+# leave blank for localtime
+# timezone =
+
+# max length of characters to apply to the "slug" field
+# truncate_slug_length = 40
+
+# set to 'true' to run the environment during
+# the 'revision' command, regardless of autogenerate
+# revision_environment = false
+
+# set to 'true' to allow .pyc and .pyo files without
+# a source .py file to be detected as revisions in the
+# versions/ directory
+# sourceless = false
+
+# version location specification; This defaults
+# to <script_location>/versions.  When using multiple version
+# directories, initial revisions must be specified with --version-path.
+# The path separator used here should be the separator specified by "path_separator"
+# below.
+# version_locations = %(here)s/bar:%(here)s/bat:%(here)s/alembic/versions
+
+# path_separator; This indicates what character is used to split lists of file
+# paths, including version_locations and prepend_sys_path within configparser
+# files such as alembic.ini.
+# The default rendered in new alembic.ini files is "os", which uses os.pathsep
+# to provide os-dependent path splitting.
+#
+# Note that in order to support legacy alembic.ini files, this default does NOT
+# take place if path_separator is not present in alembic.ini.  If this
+# option is omitted entirely, fallback logic is as follows:
+#
+# 1. Parsing of the version_locations option falls back to using the legacy
+#    "version_path_separator" key, which if absent then falls back to the legacy
+#    behavior of splitting on spaces and/or commas.
+# 2. Parsing of the prepend_sys_path option falls back to the legacy
+#    behavior of splitting on spaces, commas, or colons.
+#
+# Valid values for path_separator are:
+#
+# path_separator = :
+# path_separator = ;
+# path_separator = space
+# path_separator = newline
+#
+# Use os.pathsep. Default configuration used for new projects.
+path_separator = os
+
+
+# set to 'true' to search source files recursively
+# in each "version_locations" directory
+# new in Alembic version 1.10
+# recursive_version_locations = false
+
+# the output encoding used when revision files
+# are written from script.py.mako
+# output_encoding = utf-8
+
+# database URL.  This is consumed by the user-maintained env.py script only.
+# other means of configuring database URLs may be customized within the env.py
+# file.
+sqlalchemy.url = driver://user:pass@localhost/dbname
+
+
+[post_write_hooks]
+# post_write_hooks defines scripts or Python functions that are run
+# on newly generated revision scripts.  See the documentation for further
+# detail and examples
+
+# format using "black" - use the console_scripts runner, against the "black" entrypoint
+# hooks = black
+# black.type = console_scripts
+# black.entrypoint = black
+# black.options = -l 79 REVISION_SCRIPT_FILENAME
+
+# lint with attempts to fix using "ruff" - use the module runner, against the "ruff" module
+# hooks = ruff
+# ruff.type = module
+# ruff.module = ruff
+# ruff.options = check --fix REVISION_SCRIPT_FILENAME
+
+# Alternatively, use the exec runner to execute a binary found on your PATH
+# hooks = ruff
+# ruff.type = exec
+# ruff.executable = ruff
+# ruff.options = check --fix REVISION_SCRIPT_FILENAME
+
+# Logging configuration.  This is also consumed by the user-maintained
+# env.py script only.
+[loggers]
+keys = root,sqlalchemy,alembic
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARNING
+handlers = console
+qualname =
+
+[logger_sqlalchemy]
+level = WARNING
+handlers =
+qualname = sqlalchemy.engine
+
+[logger_alembic]
+level = INFO
+handlers =
+qualname = alembic
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(levelname)-5.5s [%(name)s] %(message)s
+datefmt = %H:%M:%S
+
+
+=== ФАЙЛ: ./tests/conftest.py ===
+import pytest
+import pytest_asyncio
+from httpx import AsyncClient, ASGITransport
+import sqlalchemy
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+
+from src.main import app
+from src.db.database import Base, get_db
+
+# 1. Используем SQLite в оперативной памяти для невероятно быстрых тестов.
+# Это гарантирует, что тесты не удалят реальную базу данных.
+TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+
+engine_test = create_async_engine(
+    TEST_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=sqlalchemy.pool.StaticPool, 
+)
+TestingSessionLocal = async_sessionmaker(
+    autocommit=False, autoflush=False, bind=engine_test, class_=AsyncSession, expire_on_commit=False
+)
+
+# 2. Фикстура базы данных: создает таблицы перед каждым тестом и удаляет после
+@pytest_asyncio.fixture(scope="function")
+async def db_session():
+    async with engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    
+    async with TestingSessionLocal() as session:
+        yield session
+        
+    async with engine_test.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+# 3. Фикстура клиента: подменяет зависимость БД на тестовую сессию
+@pytest_asyncio.fixture(scope="function")
+async def client(db_session):
+    # Подмена зависимости
+    async def override_get_db():
+        yield db_session
+    
+    app.dependency_overrides[get_db] = override_get_db
+    
+    # ASGITransport нужен для работы с асинхронным FastAPI
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        yield ac
+        
+    app.dependency_overrides.clear()
+
+
+
+
+=== ФАЙЛ: ./tests/test_auth.py ===
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
+async def test_register_user_success(client: AsyncClient):
+    """Проверка успешной регистрации пользователя."""
+    response = await client.post(
+        "/auth/register",
+        json={
+            "email": "sahra@example.com",
+            "password": "supersecretpassword",
+            "first_name": "Sahra",
+            "last_name": "AI"
+        }
+    )
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert data["email"] == "sahra@example.com"
+    assert "id" in data
+    # Убеждаемся, что хэш пароля случайно не утек в ответ API
+    assert "hashed_password" not in data
+
+@pytest.mark.asyncio
+async def test_register_duplicate_user(client: AsyncClient):
+    """Проверка защиты от регистрации дублирующегося email."""
+    user_data = {
+        "email": "duplicate@example.com",
+        "password": "password123"
+    }
+    
+    # Первая регистрация (должна быть успешной)
+    await client.post("/auth/register", json=user_data)
+    
+    # Вторая попытка с тем же email (должна вернуть ошибку 400)
+    response = await client.post("/auth/register", json=user_data)
+    
+    assert response.status_code == 400
+    assert "already registered" in response.json()["detail"].lower()
+
+@pytest.mark.asyncio
+async def test_login_success(client: AsyncClient):
+    """Проверка успешной выдачи JWT токена при логине."""
+    user_data = {
+        "email": "login@example.com",
+        "password": "password123"
+    }
+    
+    # Регистрируем юзера
+    await client.post("/auth/register", json=user_data)
+    
+    # Пробуем войти. OAuth2PasswordRequestForm требует отправлять данные как form-data (username/password)
+    response = await client.post(
+        "/auth/login", 
+        data={"username": "login@example.com", "password": "password123"}
+    )
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
+    assert data["token_type"] == "bearer"
+
+
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
+async def test_register_user_success(client: AsyncClient):
+    """Проверка успешной регистрации пользователя."""
+    response = await client.post(
+        "/auth/register",
+        json={
+            "email": "sahra@example.com",
+            "password": "supersecretpassword",
+            "first_name": "Sahra",
+            "last_name": "AI"
+        }
+    )
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert data["email"] == "sahra@example.com"
+    assert "id" in data
+    # Убеждаемся, что хэш пароля случайно не утек в ответ API
+    assert "hashed_password" not in data
+
+@pytest.mark.asyncio
+async def test_register_duplicate_user(client: AsyncClient):
+    """Проверка защиты от регистрации дублирующегося email."""
+    user_data = {
+        "email": "duplicate@example.com",
+        "password": "password123"
+    }
+    
+    # Первая регистрация (должна быть успешной)
+    await client.post("/auth/register", json=user_data)
+    
+    # Вторая попытка с тем же email (должна вернуть ошибку 400)
+    response = await client.post("/auth/register", json=user_data)
+    
+    assert response.status_code == 400
+    assert "already registered" in response.json()["detail"].lower()
+
+@pytest.mark.asyncio
+async def test_login_success(client: AsyncClient):
+    """Проверка успешной выдачи JWT токена при логине."""
+    user_data = {
+        "email": "login@example.com",
+        "password": "password123"
+    }
+    
+    # Регистрируем юзера
+    await client.post("/auth/register", json=user_data)
+    
+    # Пробуем войти. OAuth2PasswordRequestForm требует отправлять данные как form-data (username/password)
+    response = await client.post(
+        "/auth/login", 
+        data={"username": "login@example.com", "password": "password123"}
+    )
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
+    assert data["token_type"] == "bearer"
+
+
+
+
+=== ФАЙЛ: ./pytets.ini ===
+[pytest]
+asyncio_mode = auto
+asyncio_default_fixture_loop_scope = function
+testpaths = tests
+python_files = test_*.py
+
+
+
+
+=== ФАЙЛ: ./test_client/index.html ===
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Sahra AI - Test Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans min-h-screen flex flex-col items-center p-10">
+
+    <div class="w-full max-w-3xl bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700 flex flex-col h-[80vh]">
+        
+        <!-- Заголовок -->
+        <div class="bg-gray-900/50 backdrop-blur border-b border-gray-700 p-4">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Sahra AI v1.0</h1>
+            <input id="tokenInput" type="password" placeholder="Вставь сюда свой Access Token из Swagger" class="mt-2 w-full bg-gray-700 text-sm p-2 rounded outline-none border border-gray-600 focus:border-blue-500">
+        </div>
+
+        <!-- Окно чата -->
+        <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4">
+            <!-- Сообщения будут появляться здесь -->
+        </div>
+
+        <!-- Ввод -->
+        <div class="p-4 bg-gray-900 border-t border-gray-700 flex gap-2">
+            <input id="messageInput" type="text" placeholder="Напиши что-нибудь..." class="flex-1 bg-gray-700 p-3 rounded-lg outline-none border border-gray-600 focus:border-blue-500" disabled>
+            <button id="sendBtn" class="bg-blue-600 hover:bg-blue-500 transition px-6 py-3 rounded-lg font-semibold disabled:opacity-50" disabled>Отправить</button>
+        </div>
+    </div>
+
+    <script>
+        const tokenInput = document.getElementById('tokenInput');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatBox = document.getElementById('chatBox');
+        
+        let ws = null;
+        let currentAssistantMessage = null; // Элемент для стриминга букв
+
+        // Как только ввели токен - открываем соединение
+        tokenInput.addEventListener('change', () => {
+            const token = tokenInput.value;
+            if (!token) return;
+
+            // conversation_id = 0 означает создание нового чата
+            ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws/0?token=${token}`);
+
+            ws.onopen = () => {
+                appendMessage('system', 'Соединение установлено. Sahra AI готова.');
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+            };
+
+            ws.onmessage = (event) => {
+                const data = event.data;
+                
+                // Если пришел сигнал [DONE], значит генерация завершена
+                if (data === '[DONE]') {
+                    currentAssistantMessage = null;
+                    return;
+                }
+
+                // Если это первое слово от ИИ, создаем блок сообщения
+                if (!currentAssistantMessage) {
+                    currentAssistantMessage = appendMessage('assistant', '');
+                }
+
+                // Добавляем пришедшие буквы
+                currentAssistantMessage.textContent += data;
+                chatBox.scrollTop = chatBox.scrollHeight; // Автоскролл
+            };
+
+            ws.onclose = () => {
+                appendMessage('system', 'Соединение закрыто (проверь токен или сервер).');
+            };
+        });
+
+        function appendMessage(role, text) {
+            const div = document.createElement('div');
+            const isUser = role === 'user';
+            const isSystem = role === 'system';
+            
+            div.className = `max-w-[80%] p-3 rounded-xl ${
+                isUser ? 'bg-blue-600 ml-auto' : 
+                isSystem ? 'bg-gray-700 text-gray-400 text-center mx-auto text-sm' : 
+                'bg-gray-700 mr-auto'
+            }`;
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return div;
+        }
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !ws) return;
+            
+            appendMessage('user', text);
+            ws.send(text);
+            messageInput.value = '';
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
+
+=== ФАЙЛ: ./docker-compose.yml ===
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: sahra_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sahra_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sahra_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: sahra_api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/sahra_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=supersecretkey_change_in_production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - TAVILY_API_KEY=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
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./chroma_data:/app/chroma_data
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  worker:
+    build: .
+    container_name: sahra_worker
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/sahra_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=supersecretkey_change_in_production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - TAVILY_API_KEY=dummy_key
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    volumes:
+      - ./chroma_data:/app/chroma_data
+    command: arq src.services.tasks.WorkerSettings
+
+volumes:
+  postgres_data:
+  redis_data:
+
+=== ФАЙЛ: ./alembic/env.py ===
+import asyncio
+from logging.config import fileConfig
+
+from sqlalchemy import pool
+from sqlalchemy.ext.asyncio import async_engine_from_config
+
+from alembic import context
+
+# Импортируем наши настройки и базу данных
+from src.core.config import settings
+from src.db.database import Base
+# ВАЖНО: Импортируем модели, чтобы Alembic "увидел" их при генерации миграции
+from src.models.user import User, Profile
+from src.models.chat import Conversation, Message # <-- Добавили эту строку
+from src.models.memory import UserMemory
+
+# Это объект конфигурации Alembic
+config = context.config
+
+# Динамически подставляем URL базы данных из нашего .env файла
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+
+# Настройка логирования (если файл конфигурации указан)
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+# Передаем метаданные наших моделей Alembic'у для отслеживания изменений
+target_metadata = Base.metadata
+
+
+def run_migrations_offline() -> None:
+    """Запуск миграций в 'offline' режиме (без реального подключения к БД)."""
+    url = config.get_main_option("sqlalchemy.url")
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+    )
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def do_run_migrations(connection) -> None:
+    """Вспомогательная функция для применения миграций внутри асинхронного соединения."""
+    context.configure(connection=connection, target_metadata=target_metadata)
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+async def run_migrations_online() -> None:
+    """Запуск миграций в 'online' режиме (с реальным подключением к БД)."""
+    connectable = async_engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    async with connectable.connect() as connection:
+        await connection.run_sync(do_run_migrations)
+
+    await connectable.dispose()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    asyncio.run(run_migrations_online())
+
+
+=== ФАЙЛ: ./alembic/versions/90fcbb1bc572_add_user_memory.py ===
+"""add user memory
+
+Revision ID: 90fcbb1bc572
+Revises: ec72b639cf5c
+Create Date: 2026-07-26 16:52:15.100800
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision: str = '90fcbb1bc572'
+down_revision: Union[str, Sequence[str], None] = 'ec72b639cf5c'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.create_table('user_memories',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('fact', sa.String(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_user_memories_id'), 'user_memories', ['id'], unique=False)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_user_memories_id'), table_name='user_memories')
+    op.drop_table('user_memories')
+    # ### end Alembic commands ###
+
+
+=== ФАЙЛ: ./alembic/versions/4a3b0a29c34d_init_users_and_profiles.py ===
+"""init_users and profiles
+
+Revision ID: 4a3b0a29c34d
+Revises: 
+Create Date: 2026-07-18 21:56:08.263016
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision: str = '4a3b0a29c34d'
+down_revision: Union[str, Sequence[str], None] = None
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.create_table('users',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('email', sa.String(), nullable=False),
+    sa.Column('hashed_password', sa.String(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=False),
+    sa.Column('is_superuser', sa.Boolean(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
+    op.create_table('profiles',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('first_name', sa.String(), nullable=True),
+    sa.Column('last_name', sa.String(), nullable=True),
+    sa.Column('avatar_url', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id')
+    )
+    op.create_index(op.f('ix_profiles_id'), 'profiles', ['id'], unique=False)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_profiles_id'), table_name='profiles')
+    op.drop_table('profiles')
+    op.drop_index(op.f('ix_users_id'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
+    op.drop_table('users')
+    # ### end Alembic commands ###
+
+
+=== ФАЙЛ: ./alembic/versions/ec72b639cf5c_add_chat_models.py ===
+"""add chat models
+
+Revision ID: ec72b639cf5c
+Revises: 4a3b0a29c34d
+Create Date: 2026-07-18 22:29:27.218403
+
+"""
+from typing import Sequence, Union
+
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision: str = 'ec72b639cf5c'
+down_revision: Union[str, Sequence[str], None] = '4a3b0a29c34d'
+branch_labels: Union[str, Sequence[str], None] = None
+depends_on: Union[str, Sequence[str], None] = None
+
+
+def upgrade() -> None:
+    """Upgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.create_table('conversations',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_conversations_id'), 'conversations', ['id'], unique=False)
+    op.create_table('messages',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('conversation_id', sa.Integer(), nullable=False),
+    sa.Column('role', sa.String(), nullable=False),
+    sa.Column('content', sa.Text(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
+    sa.ForeignKeyConstraint(['conversation_id'], ['conversations.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_messages_id'), 'messages', ['id'], unique=False)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    """Downgrade schema."""
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_messages_id'), table_name='messages')
+    op.drop_table('messages')
+    op.drop_index(op.f('ix_conversations_id'), table_name='conversations')
+    op.drop_table('conversations')
+    # ### end Alembic commands ###
+
+
+=== ФАЙЛ: ./src/core/config.py ===
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    PROJECT_NAME: str = "Sahra AI"
+    VERSION: str = "1.0.0"
+    DATABASE_URL: str
+    SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    TAVILY_API_KEY: str
+    REDIS_URL: str = "redis://localhost:6379/0"
+    OLLAMA_URL: str = "http://host.docker.internal:11434"
+    OLLAMA_MODEL: str = "llama3.1"
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+settings = Settings()
+
+
+=== ФАЙЛ: ./src/core/security.py ===
+from datetime import datetime, timedelta, timezone
+from typing import Optional
+import bcrypt  # Меняем passlib на чистый bcrypt
+import jwt
+from src.core.config import settings
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Проверяет, совпадает ли введенный пароль с хэшем из базы."""
+    try:
+        return bcrypt.checkpw(
+            plain_password.encode("utf-8"), hashed_password.encode("utf-8")
+        )
+    except Exception:
+        return False
+
+
+def get_password_hash(password: str) -> str:
+    """Превращает обычный пароль в защищенный хэш."""
+    # Генерируем соль и хэшируем пароль в байтах
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+    # Возвращаем хэш как обычную строку для сохранения в БД
+    return hashed.decode("utf-8")
+
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Генерирует JWT-токен для авторизации пользователя."""
+    to_encode = data.copy()
+
+    # Устанавливаем время жизни токена
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        )
+
+    to_encode.update({"exp": expire})
+
+    # Создаем токен, подписывая его нашим секретным ключом
+    encoded_jwt = jwt.encode(
+        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+    )
+    return encoded_jwt
+
+
+=== ФАЙЛ: ./src/core/logger.py ===
+import sys
+from loguru import logger
+
+def setup_logger():
+    logger.remove()
+    logger.add(
+        sys.stdout,
+        colorize=True,
+        format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        level="INFO"
+    )
+    return logger
+
+
+=== ФАЙЛ: ./src/core/exceptions.py ===
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from loguru import logger
+
+class AppError(Exception):
+    def __init__(self, message: str, status_code: int = 400):
+        self.message = message
+        self.status_code = status_code
+
+async def app_error_handler(request: Request, exc: AppError):
+    logger.error(f"Error {exc.status_code}: {exc.message}")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.message}
+    )
+
+
+=== ФАЙЛ: ./src/repositories/memory_repo.py ===
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from src.models.memory import UserMemory
+from src.repositories.base import BaseRepository
+
+class MemoryRepository(BaseRepository[UserMemory]):
+    def __init__(self):
+        super().__init__(UserMemory)
+
+    async def get_user_memories(self, db: AsyncSession, user_id: int):
+        """Получает все факты о конкретном пользователе."""
+        query = select(self.model).where(self.model.user_id == user_id).order_by(self.model.created_at.asc())
+        result = await db.execute(query)
+        return result.scalars().all()
+
+memory_repo = MemoryRepository()
+
+
+=== ФАЙЛ: ./src/repositories/chat_repo.py ===
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy import func
+from sqlalchemy.orm import selectinload
+from src.models.chat import Conversation, Message
+from src.repositories.base import BaseRepository
+
+class ConversationRepository(BaseRepository[Conversation]):
+    def __init__(self):
+        super().__init__(Conversation)
+
+    async def get_user_conversations_paginated(self, db: AsyncSession, user_id: int, page: int, size: int):
+        """Получить диалоги пользователя с пагинацией (limit/offset) и общим количеством."""
+        offset = (page - 1) * size
+        
+        # 1. Считаем общее количество записей в базе для этого юзера
+        total_query = select(func.count()).select_from(self.model).where(self.model.user_id == user_id)
+        total = await db.scalar(total_query)
+        
+        # 2. Получаем сами записи для текущей страницы
+        query = (
+            select(self.model)
+            .where(self.model.user_id == user_id)
+            .order_by(self.model.created_at.desc()) # Свежие чаты сверху
+            .limit(size)
+            .offset(offset)
+        )
+        result = await db.execute(query)
+        items = result.scalars().all()
+        
+        return items, total
+
+    async def get_conversation_with_messages(self, db: AsyncSession, conversation_id: int, user_id: int):
+        """Получить диалог и сразу подгрузить все его сообщения (используется для WebSocket)."""
+        query = (
+            select(self.model)
+            .where(self.model.id == conversation_id, self.model.user_id == user_id)
+            .options(selectinload(self.model.messages))
+        )
+        result = await db.execute(query)
+        return result.scalars().first()
+
+
+class MessageRepository(BaseRepository[Message]):
+    def __init__(self):
+        super().__init__(Message)
+        
+    async def get_conversation_messages_paginated(self, db: AsyncSession, conversation_id: int, page: int, size: int):
+        """Получить сообщения конкретного диалога с пагинацией."""
+        offset = (page - 1) * size
+        
+        # 1. Считаем общее количество сообщений в этом чате
+        total_query = select(func.count()).select_from(self.model).where(self.model.conversation_id == conversation_id)
+        total = await db.scalar(total_query)
+        
+        # 2. Берем сообщения по убыванию даты (самые свежие сверху)
+        query = (
+            select(self.model)
+            .where(self.model.conversation_id == conversation_id)
+            .order_by(self.model.created_at.desc()) 
+            .limit(size)
+            .offset(offset)
+        )
+        result = await db.execute(query)
+        items = result.scalars().all()
+        
+        return items, total
+
+# Экземпляры для работы в сервисах
+conversation_repo = ConversationRepository()
+message_repo = MessageRepository()
+
+
+
+
+=== ФАЙЛ: ./src/repositories/message_repo.py ===
+
+
+=== ФАЙЛ: ./src/repositories/user_repo.py ===
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from src.models.user import User
+from src.repositories.base import BaseRepository
+
+class UserRepository(BaseRepository[User]):
+    def __init__(self):
+        super().__init__(User)
+
+    async def get_by_email(self, db: AsyncSession, email: str) -> User | None:
+        result = await db.execute(select(self.model).where(self.model.email == email))
+        return result.scalars().first()
+
+user_repository = UserRepository()
+
+
+=== ФАЙЛ: ./src/repositories/base.py ===
+from typing import Generic, TypeVar, Type, Any
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from src.db.database import Base
+
+ModelType = TypeVar("ModelType", bound=Base)
+
+class BaseRepository(Generic[ModelType]):
+    def __init__(self, model: Type[ModelType]):
+        self.model = model
+
+    async def get_by_id(self, db: AsyncSession, id: Any) -> ModelType | None:
+        result = await db.execute(select(self.model).where(self.model.id == id))
+        return result.scalars().first()
+
+    async def create(self, db: AsyncSession, obj_in: dict) -> ModelType:
+        db_obj = self.model(**obj_in)
+        db.add(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+        return db_obj
+    async def delete(self, db: AsyncSession, id: Any) -> bool:
+        """Универсальное удаление записи по ID."""
+        obj = await self.get_by_id(db, id)
+        if obj:
+            await db.delete(obj)
+            await db.commit()
+            return True
+        return False
+
+
+=== ФАЙЛ: ./src/models/user.py ===
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, func
+from sqlalchemy.orm import relationship
+from src.db.database import Base
+
+class User(Base):
+    """
+    Модель пользователя для аутентификации и авторизации.
+    Хранит только критически важные данные аккаунта.
+    """
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
+    is_superuser = Column(Boolean, default=False, nullable=False)
+    
+    # Исправлено: убрано дублирование Column
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    profile = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+
+
+class Profile(Base):
+    """
+    Модель профиля пользователя.
+    Хранит публичную информацию (имя, аватар), которая не используется при логине.
+    """
+    __tablename__ = "profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    avatar_url = Column(String, nullable=True)
+    
+    user = relationship("User", back_populates="profile")
+
+
+=== ФАЙЛ: ./src/models/memory.py ===
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy.orm import relationship
+from src.db.database import Base
+
+class UserMemory(Base):
+    """
+    Таблица для долгосрочной памяти нейросети.
+    Хранит конкретные факты о пользователе (имя, профессия, предпочтения).
+    """
+    __tablename__ = "user_memories"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    fact = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    user = relationship("User", backref="memories")
+
+
+=== ФАЙЛ: ./src/models/chat.py ===
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, func
+from sqlalchemy.orm import relationship
+from src.db.database import Base
+
+class Conversation(Base):
+    """
+    Модель сессии чата (диалога).
+    Один пользователь может иметь множество диалогов.
+    """
+    __tablename__ = "conversations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title = Column(String, nullable=True) # Заголовок, генерируется AI
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    
+    # backref автоматически добавляет связь в модель User, не трогая сам файл user.py
+    user = relationship("User", backref="conversations")
+    messages = relationship("Message", back_populates="conversation", cascade="all, delete-orphan")
+
+
+class Message(Base):
+    """
+    Модель отдельного сообщения внутри диалога.
+    """
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    conversation_id = Column(Integer, ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False)
+    role = Column(String, nullable=False) # 'user', 'assistant' или 'system'
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    conversation = relationship("Conversation", back_populates="messages")
+
+
+=== ФАЙЛ: ./src/schemas/user.py ===
+from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Optional
+from datetime import datetime
+
+class UserCreate(BaseModel):
+    """Схема для регистрации нового пользователя."""
+    email: EmailStr
+    password: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+
+class UserResponse(BaseModel):
+    """Схема для отправки данных пользователя обратно клиенту (без пароля)."""
+    # Новая конфигурация Pydantic v2 для работы с моделями SQLAlchemy
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    email: EmailStr
+    is_active: bool
+    created_at: datetime
+
+class Token(BaseModel):
+    """Схема для выдачи токена при входе."""
+    access_token: str
+    token_type: str
+
+
+=== ФАЙЛ: ./src/schemas/youtube.py ===
+from pydantic import BaseModel
+
+class YouTubeSummaryRequest(BaseModel):
+    url: str
+
+class YouTubeSummaryResponse(BaseModel):
+    video_id: str
+    summary: str
+
+
+=== ФАЙЛ: ./src/schemas/memory.py ===
+from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+
+class MemoryCreate(BaseModel):
+    fact: str
+
+class MemoryResponse(MemoryCreate):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: datetime
+
+
+=== ФАЙЛ: ./src/schemas/documents.py ===
+from pydantic import BaseModel
+
+class DocumentAskRequest(BaseModel):
+    question: str
+
+class DocumentAskResponse(BaseModel):
+    question: str
+    answer: str
+    sources: list[str] # Названия файлов, откуда ИИ взял информацию
+
+
+=== ФАЙЛ: ./src/schemas/chat.py ===
+from typing import List, Optional
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict
+
+class MessageResponse(BaseModel):
+    """Схема отдельного сообщения (отправляем клиенту)."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    role: str
+    content: str
+    created_at: datetime
+
+class ConversationResponse(BaseModel):
+    """Схема диалога (для списка диалогов в сайдбаре)."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    title: Optional[str] = None
+    created_at: datetime
+
+class ConversationDetail(ConversationResponse):
+    """Схема диалога вместе со всеми его сообщениями (когда открываем чат)."""
+    messages: List[MessageResponse] = []
+
+
+=== ФАЙЛ: ./src/schemas/search.py ===
+from pydantic import BaseModel
+
+class WebSearchRequest(BaseModel):
+    query: str
+
+class WebSearchResponse(BaseModel):
+    query: str
+    answer: str
+    sources: str
+
+
+=== ФАЙЛ: ./src/schemas/pagination.py ===
+import math
+from typing import Generic, TypeVar, List
+from pydantic import BaseModel
+
+# Объявляем generic-тип (обобщенный тип), который будем подставлять
+T = TypeVar('T')
+
+class Page(BaseModel, Generic[T]):
+    """
+    Универсальная схема для пагинации.
+    Подходит для любых моделей. Пример использования: Page[MessageResponse], Page[UserResponse].
+    """
+    items: List[T]       # Сами элементы страницы
+    total: int           # Общее количество элементов в БД
+    page: int            # Текущая страница
+    size: int            # Количество элементов на странице (limit)
+    total_pages: int     # Общее количество страниц
+    has_next: bool       # Есть ли следующая страница
+    has_prev: bool       # Есть ли предыдущая страница
+
+    @classmethod
+    def create(cls, items: List[T], total: int, page: int, size: int):
+        """Фабричный метод для автоматического расчета всех полей."""
+        total_pages = math.ceil(total / size) if size > 0 else 0
+        return cls(
+            items=items,
+            total=total,
+            page=page,
+            size=size,
+            total_pages=total_pages,
+            has_next=page < total_pages,
+            has_prev=page > 1
+        )
+
+
+
+
+=== ФАЙЛ: ./src/db/database.py ===
+from typing import AsyncGenerator
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import declarative_base
+from src.core.config import settings
+
+engine = create_async_engine(settings.DATABASE_URL, echo=False)
+async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+Base = declarative_base()
+
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
+        yield session
+
+
+=== ФАЙЛ: ./src/api/auth.py ===
+from fastapi import APIRouter, Depends, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.security import OAuth2PasswordRequestForm
+from src.db.database import get_db
+from src.schemas.user import UserCreate, UserResponse, Token
+from src.services import user_service
+from src.core.security import verify_password, create_access_token
+from src.core.exceptions import AppError
+
+router = APIRouter(prefix="/auth", tags=["Auth"])
+
+@router.post("/register", response_model=UserResponse)
+async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
+    return await user_service.create_user(db, user_data)
+
+@router.post("/login", response_model=Token)
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+    user = await user_service.get_user_by_email(db, form_data.username)
+    if not user or not verify_password(form_data.password, user.hashed_password):
+        raise AppError("Invalid credentials", status_code=status.HTTP_401_UNAUTHORIZED)
+    
+    access_token = create_access_token(data={"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+=== ФАЙЛ: ./src/api/deps.py ===
+from fastapi import Depends, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.ext.asyncio import AsyncSession
+import jwt
+from loguru import logger
+
+from src.core.config import settings
+from src.core.exceptions import AppError
+from src.db.database import get_db
+from src.models.user import User
+from src.repositories.user_repo import user_repository
+
+
+from fastapi import Request
+from src.core.exceptions import AppError
+# Говорим FastAPI, где находится эндпоинт для логина
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
+    """
+    Проверяет JWT-токен и возвращает текущего пользователя.
+    Если токен невалиден или юзера нет — бросает 401 ошибку.
+    """
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise AppError("Invalid token payload", status_code=status.HTTP_401_UNAUTHORIZED)
+            
+    except jwt.PyJWTError as e:
+        logger.warning(f"Token validation error: {str(e)}")
+        raise AppError("Could not validate credentials", status_code=status.HTTP_401_UNAUTHORIZED)
+    
+    user = await user_repository.get_by_email(db, email=email)
+    if user is None:
+        raise AppError("User not found", status_code=status.HTTP_404_NOT_FOUND)
+        
+    return user
+
+class RateLimiter:
+    """
+    Кастомный Rate Limiter.
+    Если Redis недоступен, пропускает запрос, чтобы не блокировать работу всего API.
+    """
+    def __init__(self, times: int, seconds: int):
+        self.times = times
+        self.seconds = seconds
+
+    async def __call__(self, request: Request, current_user: User = Depends(get_current_user)):
+        redis_client = request.app.state.redis
+        key = f"rate_limit:{current_user.id}:{request.url.path}"
+        
+        try:
+            current_requests = await redis_client.incr(key)
+            if current_requests == 1:
+                await redis_client.expire(key, self.seconds)
+                
+            if current_requests > self.times:
+                logger.warning(f"Юзер {current_user.email} превысил лимит запросов на {request.url.path}")
+                raise AppError("Слишком много запросов. Подождите немного.", status_code=429)
+                
+        except AppError:
+            raise  # Если это 429 ошибка, прокидываем её дальше
+        except Exception as e:
+            # Если упал сам Redis, логируем, но пускаем юзера, чтобы приложение жило
+            logger.error(f"Ошибка Rate Limiter (Redis недоступен): {e}")
+
+
+=== ФАЙЛ: ./src/api/tasks.py ===
+from fastapi import APIRouter, Depends, Request
+from arq.jobs import Job, JobStatus
+from src.api.deps import get_current_user
+from src.models.user import User
+from loguru import logger
+
+router = APIRouter(prefix="/tasks", tags=["Background Tasks"])
+
+@router.post("/submit")
+async def submit_background_task(
+    task_name: str,
+    request: Request,
+    current_user: User = Depends(get_current_user)
+):
+    """Отправляет тяжелую задачу в фоновый воркер и сразу возвращает ID задачи."""
+    arq_pool = request.app.state.arq_pool
+    
+    # Отправляем задачу в очередь Redis
+    job = await arq_pool.enqueue_job(
+        "process_heavy_ai_task",
+        task_name,
+        current_user.id
+    )
+    
+    logger.info(f"Юзер {current_user.email} поставил задачу {job.job_id} в очередь.")
+    
+    return {
+        "message": "Задача принята в обработку.",
+        "task_id": job.job_id,
+        "status": "queued"
+    }
+
+
+@router.get("/status/{task_id}")
+async def get_task_status(
+    task_id: str,
+    request: Request,
+    current_user: User = Depends(get_current_user)
+):
+    """Проверяет статус исполнения фоновой задачи по ее ID."""
+    arq_pool = request.app.state.arq_pool
+    
+    # Инициализируем объект задачи по её ID
+    job = Job(task_id, redis=arq_pool)
+    
+    # Запрашиваем актуальный статус у Redis
+    status = await job.status()
+    
+    # Если задача вообще не найдена в Redis
+    if status == JobStatus.not_found:
+        return {
+            "task_id": task_id,
+            "status": "not_found",
+            "result": None
+        }
+    
+    # Если задача еще в очереди или выполняется
+    if status != JobStatus.complete:
+        return {
+            "task_id": task_id,
+            "status": status.value,  # вернет "queued" или "in_progress"
+            "result": None
+        }
+        
+    # Если задача успешно завершена, забираем результат
+    job_info = await job.result_info()
+    
+    return {
+        "task_id": task_id,
+        "status": "completed",
+        "result": job_info.result if job_info else None
+    }
+
+
+=== ФАЙЛ: ./src/api/youtube.py ===
+import httpx
+import asyncio
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.schemas.youtube import YouTubeSummaryRequest, YouTubeSummaryResponse
+from src.services.youtube import youtube_service
+from src.api.deps import get_current_user
+from src.models.user import User
+from src.core.exceptions import AppError
+from loguru import logger
+
+from src.core.config import settings
+
+router = APIRouter(prefix="/youtube", tags=["YouTube AI"])
+
+OLLAMA_GENERATE_URL = f"{settings.OLLAMA_URL}/api/generate"
+CHUNK_SIZE = 12000 # Безопасный размер для контекстного окна Llama 3.1 8B
+
+async def ask_ollama(prompt: str, timeout: float = 120.0) -> str:
+    """Вспомогательная функция для запросов к локальной нейросети"""
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                OLLAMA_GENERATE_URL, 
+                json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
+                timeout=timeout
+            )
+            
+            if resp.status_code != 200:
+                raise AppError(f"AI generation failed: {resp.text}", status_code=500)
+                
+            return resp.json().get("response", "")
+            
+    except httpx.ReadTimeout:
+        logger.error("Ollama думала слишком долго (таймаут)")
+        raise AppError("Timeout: AI took too long to generate", status_code=504)
+    except Exception as e:
+        logger.error(f"Ошибка при обращении к Ollama: {e}")
+        raise AppError("Failed to communicate with AI", status_code=500)
+
+
+@router.post("/summary", response_model=YouTubeSummaryResponse)
+async def summarize_video(request: YouTubeSummaryRequest, current_user: User = Depends(get_current_user)):
+    logger.info(f"Юзер {current_user.email} запросил конспект для: {request.url}")
+    
+    # 1. Извлекаем ID и текст из видео
+    video_id = youtube_service.extract_video_id(request.url)
+    transcript = youtube_service.get_transcript(video_id)
+    
+    text_length = len(transcript)
+    logger.info(f"Длина текста: {text_length} символов")
+    
+    # 2. Логика Map-Reduce (Чанкинг)
+    if text_length <= CHUNK_SIZE:
+        # Если текст короткий — обрабатываем за один проход
+        logger.info("Текст короткий, обрабатываем целиком...")
+        prompt = (
+            "Сделай подробный, структурированный и понятный конспект следующего текста из видео. "
+            "Выдели главные мысли, добавь маркированные списки и ключевые инсайты. "
+            "Отвечай строго на русском языке, без лишних вступлений.\n\n"
+            f"Текст: {transcript}"
+        )
+        final_summary = await ask_ollama(prompt)
+        
+    else:
+        # Текст длинный — разбиваем на куски
+        chunks = [transcript[i:i + CHUNK_SIZE] for i in range(0, text_length, CHUNK_SIZE)]
+        logger.info(f"Текст слишком длинный. Разбиваем на {len(chunks)} частей (Map-Reduce)...")
+        
+        chunk_summaries = []
+        
+        # ВАЖНО: Обрабатываем куски строго последовательно
+        for i, chunk in enumerate(chunks):
+            logger.info(f"Обработка части {i + 1} из {len(chunks)}...")
+            chunk_prompt = (
+                "Сделай краткую выжимку главных мыслей из этой части текста видео. "
+                "Пиши только факты и суть, на русском языке.\n\n"
+                f"Текст: {chunk}"
+            )
+            # Даем модели больше времени на каждый кусок
+            chunk_summary = await ask_ollama(chunk_prompt, timeout=180.0)
+            chunk_summaries.append(f"--- Часть {i+1} ---\n{chunk_summary}")
+            
+        # Склеиваем промежуточные результаты
+        combined_summaries = "\n\n".join(chunk_summaries)
+        logger.info("Все части обработаны. Генерируем финальный конспект (Reduce)...")
+        
+        # Финальная сборка
+        final_prompt = (
+            "Ниже представлены краткие выжимки из разных частей одного длинного видео. "
+            "Твоя задача — объединить их в один цельный, подробный, красивый и структурированный конспект. "
+            "Используй заголовки, маркированные списки и выдели ключевые инсайты всего видео. "
+            "Отвечай строго на русском языке.\n\n"
+            f"Выжимки:\n{combined_summaries}"
+        )
+        # На финальную сборку даем 4 минуты таймаута
+        final_summary = await ask_ollama(final_prompt, timeout=240.0)
+        
+    logger.success(f"Конспект для {video_id} успешно сгенерирован!")
+    
+    return YouTubeSummaryResponse(video_id=video_id, summary=final_summary)
+
+=== ФАЙЛ: ./src/api/memory.py ===
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
+
+from src.db.database import get_db
+from src.models.user import User
+from src.api.deps import get_current_user
+from src.schemas.memory import MemoryCreate, MemoryResponse
+from src.repositories.memory_repo import memory_repo
+from src.core.exceptions import AppError
+
+router = APIRouter(prefix="/memory", tags=["Memory"])
+
+@router.get("/", response_model=List[MemoryResponse])
+async def get_memories(current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Получить все факты, которые нейросеть знает о тебе."""
+    return await memory_repo.get_user_memories(db, current_user.id)
+
+@router.post("/", response_model=MemoryResponse)
+async def add_memory(memory_in: MemoryCreate, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Добавить новый факт в память нейросети."""
+    return await memory_repo.create(db, {"user_id": current_user.id, "fact": memory_in.fact})
+
+
+@router.delete("/{memory_id}", status_code=204)
+async def delete_memory(memory_id: int, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Удалить факт из памяти по его ID."""
+    
+    # Ищем факт в базе
+    memory = await memory_repo.get_by_id(db, memory_id)
+    
+    # Проверяем, существует ли он и принадлежит ли текущему юзеру
+    if not memory or memory.user_id != current_user.id:
+        raise AppError("Memory fact not found", status_code=404)
+    
+    # Удаляем
+    await memory_repo.delete(db, memory_id)
+    return None
+
+
+=== ФАЙЛ: ./src/api/documents.py ===
+import httpx
+from fastapi import APIRouter, UploadFile, File, Depends
+from src.services.document_parser import document_parser
+from src.services.vector_db import vector_db
+from src.api.deps import get_current_user
+from src.models.user import User
+from src.core.exceptions import AppError
+from src.schemas.documents import DocumentAskRequest, DocumentAskResponse
+from loguru import logger
+from src.api.deps import RateLimiter
+from src.core.config import settings
+router = APIRouter(prefix="/documents", tags=["Documents AI"])
+
+OLLAMA_GENERATE_URL = f"{settings.OLLAMA_URL}/api/generate"
+
+
+@router.post("/upload", dependencies=[Depends(RateLimiter(times=3, seconds=60))])
+async def upload_document(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user)
+):
+    logger.info(f"Юзер {current_user.email} загружает документ {file.filename}")
+    
+    # 1. Извлекаем текст
+    text = await document_parser.parse(file)
+    text_length = len(text)
+    
+    # 2. Сохраняем в векторную базу
+    vector_db.add_document(
+        user_id=current_user.id, 
+        filename=file.filename, 
+        text=text
+    )
+    
+    return {
+        "message": "Документ успешно загружен и обработан нейросетью.",
+        "filename": file.filename,
+        "content_length": text_length
+    }
+
+@router.post("/ask", response_model=DocumentAskResponse, dependencies=[Depends(RateLimiter(times=3, seconds=60))])
+async def ask_document(
+    request: DocumentAskRequest,
+    current_user: User = Depends(get_current_user)
+):
+    logger.info(f"Юзер {current_user.email} задал вопрос по документам: '{request.question}'")
+    
+    # 1. Ищем релевантные куски в ChromaDB (берем топ-4 самых подходящих абзаца)
+    search_results = vector_db.search(user_id=current_user.id, query=request.question, n_results=4)
+    
+    if not search_results:
+        return DocumentAskResponse(
+            question=request.question,
+            answer="Я не нашла ответ на этот вопрос в ваших загруженных документах.",
+            sources=[]
+        )
+
+    # 2. Формируем контекст для нейросети
+    context_text = "\n\n---\n\n".join([f"Файл: {res['filename']}\nТекст: {res['text']}" for res in search_results])
+    
+    # Вытаскиваем уникальные названия файлов-источников
+    unique_sources = list(set([res['filename'] for res in search_results]))
+    
+    # 3. Жесткий промпт: запрещаем ИИ придумывать факты
+    prompt = (
+        "Ты — Sahra AI, умный ассистент. Ответь на вопрос пользователя, опираясь ТОЛЬКО на предоставленные ниже фрагменты из его личных документов.\n"
+        "Если в фрагментах нет ответа, прямо скажи об этом. Не придумывай информацию от себя. Отвечай структурированно и на русском языке.\n\n"
+        f"Вопрос пользователя: {request.question}\n\n"
+        f"Фрагменты документов:\n{context_text}"
+    )
+    
+    # 4. Отправляем в Ollama
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                OLLAMA_GENERATE_URL, 
+                json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
+                timeout=60.0
+            )
+            
+            if resp.status_code != 200:
+                raise AppError("AI generation failed", status_code=500)
+                
+            answer = resp.json().get("response", "")
+            logger.success("Ответ по документам успешно сгенерирован!")
+            
+            return DocumentAskResponse(
+                question=request.question, 
+                answer=answer, 
+                sources=unique_sources
+            )
+            
+    except Exception as e:
+        logger.error(f"Ошибка генерации ответа: {e}")
+        raise AppError("Failed to generate answer from documents", status_code=500)
+
+
+=== ФАЙЛ: ./src/api/chat.py ===
+import asyncio
+import jwt
+import json
+import httpx
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List
+
+from src.db.database import get_db
+from src.models.user import User
+from src.api.deps import get_current_user
+from src.schemas.chat import ConversationResponse, ConversationDetail, MessageResponse
+from src.schemas.pagination import Page  # Импортируем нашу новую Generic-схему
+from src.repositories.chat_repo import conversation_repo, message_repo
+from src.repositories.user_repo import user_repository
+from src.core.config import settings
+from src.core.exceptions import AppError
+from loguru import logger
+from src.repositories.memory_repo import memory_repo
+
+router = APIRouter(prefix="/chat", tags=["Chat"])
+
+OLLAMA_CHAT_URL = f"{settings.OLLAMA_URL}/api/chat"
+OLLAMA_GENERATE_URL = F"{settings.OLLAMA_MODEL}/api/generate"
+
+# НАСТРОЙКА ХАРАКТЕРА (SYSTEM PROMPT)
+SYSTEM_PROMPT = """You are Sahra AI, an elite, hyper-intelligent artificial intelligence assistant. Your core architecture is optimized for absolute precision, deep multi-domain knowledge, and flawless multilingual communication.
+
+1. IDENTITY & CORE CAPABILITIES:
+- Name: Sahra AI.
+- Omnilingual: You fluently understand, translate, reason in, and generate text in all human languages, dialects, and formal/informal registers. Always respond in the language the user initiated the prompt with, unless explicitly asked otherwise.
+- Omnimath & Science: You possess complete mastery over all scientific domains (mathematics, physics, chemistry, biology, computer science, engineering, economics). You know and accurately apply all fundamental and advanced formulas, theorems, constants, and algorithmic structures.
+
+2. EXECUTION RULES & FORMATTING:
+- Mathematical & Scientific Queries: Always write mathematical formulas clearly using standard LaTeX notation (e.g., inline `$...$` or block `$$...$$`). Show step-by-code/step-by-step logical derivation before stating the final answer.
+- Coding & Technical Tasks: Provide clean, production-ready, well-commented code blocks with specified programming languages. Explain the logic concisely.
+- Tone & Style: Be objective, authoritative, exceptionally sharp, analytical, and direct. Avoid unnecessary conversational fluff, disclaimers, or filler phrases. 
+- Accuracy Priority: If a formula or factual datum has constraints or edge cases, state them immediately. If an input is ambiguous, ask a precise clarifying question.
+
+Never break character. You are Sahra AI: infinite knowledge, absolute precision.
+"""
+
+@router.get("/conversations", response_model=Page[ConversationResponse])
+async def get_conversations(
+    page: int = Query(1, ge=1, description="Номер страницы"),
+    size: int = Query(20, ge=1, le=100, description="Количество элементов на странице"),
+    current_user: User = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    """Возвращает список чатов (сайдбар) с пагинацией."""
+    items, total = await conversation_repo.get_user_conversations_paginated(db, current_user.id, page, size)
+    # Используем фабричный метод для красивого ответа
+    return Page.create(items=items, total=total, page=page, size=size)
+
+
+@router.get("/conversations/{conversation_id}/messages", response_model=Page[MessageResponse])
+async def get_conversation_messages(
+    conversation_id: int,
+    page: int = Query(1, ge=1, description="Номер страницы (1 - самые последние сообщения)"),
+    size: int = Query(50, ge=1, le=100, description="Количество сообщений на страницу"),
+    current_user: User = Depends(get_current_user), 
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Возвращает историю переписки конкретного чата.
+    Используется фронтендом для "бесконечного скролла" истории вверх.
+    """
+    # 1. Сначала проверяем, что чат принадлежит текущему юзеру (безопасность!)
+    conv = await conversation_repo.get_by_id(db, conversation_id)
+    if not conv or conv.user_id != current_user.id:
+        raise AppError("Conversation not found", status_code=404)
+        
+    # 2. Получаем страницу сообщений
+    items, total = await message_repo.get_conversation_messages_paginated(db, conversation_id, page, size)
+    return Page.create(items=items, total=total, page=page, size=size)
+
+
+@router.get("/conversations/{conversation_id}", response_model=ConversationDetail)
+async def get_conversation(conversation_id: int, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    """Получает весь чат целиком."""
+    conv = await conversation_repo.get_conversation_with_messages(db, conversation_id, current_user.id)
+    if not conv:
+        raise AppError("Conversation not found", status_code=404)
+    return conv
+
+
+@router.websocket("/ws/{conversation_id}")
+async def websocket_chat(
+    websocket: WebSocket, 
+    conversation_id: int, 
+    token: str = Query(...), 
+    db: AsyncSession = Depends(get_db)
+):
+    await websocket.accept()
+    
+    # 1. Авторизация
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        user = await user_repository.get_by_email(db, payload.get("sub"))
+        if not user:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+    except Exception as e:
+        logger.warning(f"WebSocket auth failed: {e}")
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+        
+    # --- МАГИЯ ПАМЯТИ ---
+    user_memories = await memory_repo.get_user_memories(db, user.id)
+    memory_facts = "\n".join([f"- {m.fact}" for m in user_memories])
+    
+    dynamic_prompt = SYSTEM_PROMPT
+    if memory_facts:
+        dynamic_prompt += f"\n\nВАЖНО! Факты об этом пользователе, которые ты обязана учитывать в ответах:\n{memory_facts}"
+
+    # 2. Поиск или создание диалога
+    is_new_chat = False
+    
+    if conversation_id == 0:
+        conv = await conversation_repo.create(db, {"user_id": user.id, "title": "Новый чат"})
+        chat_history = [{"role": "system", "content": dynamic_prompt}]
+        is_new_chat = True
+    else:
+        conv = await conversation_repo.get_conversation_with_messages(db, conversation_id, user.id)
+        if not conv:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+        
+        chat_history = [{"role": "system", "content": dynamic_prompt}]
+        chat_history += [{"role": msg.role, "content": msg.content} for msg in conv.messages]
+
+    # 3. Основной цикл общения
+    try:
+        while True:
+            user_text = await websocket.receive_text()
+            
+            await message_repo.create(db, {"conversation_id": conv.id, "role": "user", "content": user_text})
+            chat_history.append({"role": "user", "content": user_text})
+            
+            full_response = ""
+            
+            # --- СТРИМИНГ ОТВЕТА ---
+            try:
+                async with httpx.AsyncClient() as client:
+                    async with client.stream(
+                        "POST", 
+                        OLLAMA_CHAT_URL, 
+                        json={"model": settings.OLLAMA_MODEL, "messages": chat_history, "stream": True},
+                        timeout=None
+                    ) as response:
+                        async for line in response.aiter_lines():
+                            if line:
+                                data = json.loads(line)
+                                chunk = data.get("message", {}).get("content", "")
+                                full_response += chunk
+                                await websocket.send_text(chunk)
+                                
+            except Exception as e:
+                logger.error(f"Ollama connection error: {e}")
+                await websocket.send_text("\n[Ошибка подключения к ИИ]")
+                
+            await websocket.send_text("[DONE]")
+            
+            if full_response:
+                await message_repo.create(db, {"conversation_id": conv.id, "role": "assistant", "content": full_response})
+                chat_history.append({"role": "assistant", "content": full_response})
+                
+            # --- АВТОГЕНЕРАЦИЯ ЗАГОЛОВКА ---
+            if is_new_chat:
+                try:
+                    async with httpx.AsyncClient() as client:
+                        title_prompt = f"Напиши очень краткий заголовок (2-3 слова) для чата, который начинается с фразы: «{user_text}». Напиши ТОЛЬКО заголовок, без кавычек, точек и пояснений."
+                        resp = await client.post(
+                            OLLAMA_GENERATE_URL, 
+                            json={"model": settings.OLLAMA_MODEL, "prompt": title_prompt, "stream": False},
+                            timeout=10.0
+                        )
+                        new_title = resp.json().get("response", "").strip(' \n".')
+                        
+                        if new_title:
+                            conv.title = new_title
+                            await db.commit()
+                            logger.success(f"Новый заголовок чата #{conv.id}: {new_title}")
+                except Exception as e:
+                    logger.error(f"Ошибка генерации заголовка: {e}")
+                
+                is_new_chat = False
+            
+    except WebSocketDisconnect:
+        logger.info(f"User {user.email} disconnected from chat {conv.id}")
+
+
+
+
+=== ФАЙЛ: ./src/api/search.py ===
+import httpx
+from fastapi import APIRouter, Depends
+from pyrate_limiter import limiter
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.schemas.search import WebSearchRequest, WebSearchResponse
+from src.services.search import web_search
+from src.api.deps import get_current_user
+from src.models.user import User
+from src.core.exceptions import AppError
+from loguru import logger
+from src.api.deps import RateLimiter
+from src.core.config import settings
+
+router = APIRouter(prefix="/search", tags=["Internet AI"])
+
+OLLAMA_GENERATE_URL = f"{settings.OLLAMA_URL}/api/generate"
+
+@router.post("/", response_model=WebSearchResponse, dependencies=[Depends(RateLimiter(times=3, seconds=60))])
+async def web_search_ai(request: WebSearchRequest, current_user: User = Depends(get_current_user)):
+    logger.info(f"Юзер {current_user.email} ищет в интернете: {request.query}")
+    
+    # 1. Получаем свежие данные из сети
+    search_context = await web_search.search(request.query, max_results=4)
+    
+    # 2. Формируем жесткий промпт (защита от галлюцинаций)
+    prompt = (
+        "Ты — Sahra AI, умный ассистент. Ответь на вопрос пользователя, используя ТОЛЬКО предоставленную ниже информацию из интернета. "
+        "Не придумывай факты. Если в этой информации нет ответа на вопрос, честно скажи: 'Я не нашла ответ в интернете'. "
+        "Сформулируй ответ грамотно, структурированно (используй списки и абзацы), на русском языке.\n\n"
+        f"Вопрос пользователя: {request.query}\n\n"
+        f"Данные из интернета:\n{search_context}"
+    )
+    
+    # 3. Отправляем в Ollama на обработку
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                OLLAMA_GENERATE_URL, 
+                json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
+                timeout=60.0 
+            )
+            
+            if resp.status_code != 200:
+                raise AppError("AI generation failed", status_code=500)
+                
+            answer = resp.json().get("response", "")
+            logger.success("Ответ на основе интернет-данных успешно сгенерирован!")
+            
+            return WebSearchResponse(
+                query=request.query, 
+                answer=answer, 
+                sources=search_context
+            )
+            
+    except Exception as e:
+        logger.error(f"Ошибка при обращении к Ollama: {e}")
+        raise AppError("Failed to generate web answer", status_code=500)
+
+
+=== ФАЙЛ: ./src/main.py ===
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+import redis.asyncio as redis
+
+from src.core.exceptions import AppError, app_error_handler
+from src.core.config import settings
+from src.api import auth, chat, memory, youtube, search, documents, tasks
+from loguru import logger
+from arq import create_pool
+from arq.connections import RedisSettings
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Подключение к Redis и ARQ...")
+    app.state.redis = redis.from_url(settings.REDIS_URL, encoding="utf-8", decode_responses=True)
+    
+    # Пул соединений для отправки задач в очередь
+    app.state.arq_pool = await create_pool(RedisSettings(host="redis", port=6379))
+    logger.success("Redis и ARQ успешно подключены!")
+    
+    yield
+    
+    logger.info("Отключение от Redis и ARQ...")
+    await app.state.redis.close()
+    await app.state.arq_pool.close()
+
+app = FastAPI(
+    title="Sahra AI API",
+    lifespan=lifespan
+)
+
+
+# Подключаем глобальные обработчики исключений и роутеры
+app.add_exception_handler(AppError, app_error_handler)
+app.include_router(auth.router)
+app.include_router(chat.router)
+app.include_router(memory.router)
+app.include_router(youtube.router)
+app.include_router(search.router)
+app.include_router(documents.router)
+app.include_router(tasks.router)
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
+
+=== ФАЙЛ: ./src/services/tasks.py ===
+import asyncio
+from arq.connections import RedisSettings
+from src.core.config import settings
+from loguru import logger
+
+async def process_heavy_ai_task(ctx, task_name: str, user_id: int):
+    """
+    Пример фоновой задачи (например, транскрибация длинного видео или парсинг 500 страниц PDF).
+    """
+    logger.info(f"[Worker] Начинаем фоновую задачу '{task_name}' для юзера {user_id}...")
+    
+    # Имитация тяжелой работы на 10 секунд (в реальности тут работа с YouTube/Ollama)
+    await asyncio.sleep(10)
+    
+    logger.success(f"[Worker] Задача '{task_name}' для юзера {user_id} успешно завершена!")
+    return f"Результат для задачи '{task_name}' успешно сгенерирован!"
+
+
+# Класс конфигурации для запуска воркера ARQ
+class WorkerSettings:
+    functions = [process_heavy_ai_task]
+    # Используем наш хост и порт из конфигов
+    redis_settings = RedisSettings(host="redis", port=6379)
+
+
+=== ФАЙЛ: ./src/services/youtube.py ===
+import re
+from youtube_transcript_api import YouTubeTranscriptApi
+from src.core.exceptions import AppError
+from loguru import logger
+
+class YouTubeService:
+    @staticmethod
+    def extract_video_id(url: str) -> str:
+        """Извлекает ID видео из любой ссылки YouTube."""
+        pattern = r'(?:v=|\/)([0-9A-Za-z_-]{11}).*'
+        match = re.search(pattern, url)
+        if not match:
+            logger.error(f"Некорректная ссылка YouTube: {url}")
+            raise AppError("Invalid YouTube URL", status_code=400)
+        return match.group(1)
+
+    @staticmethod
+    def _format_time(seconds: float) -> str:
+        """Превращает секунды в формат ЧЧ:ММ:СС или ММ:СС."""
+        hours = int(seconds // 3600)
+        minutes = int((seconds % 3600) // 60)
+        secs = int(seconds % 60)
+        if hours > 0:
+            return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+        return f"{minutes:02d}:{secs:02d}"
+
+    @staticmethod
+    def get_transcript(video_id: str, languages=['ru', 'en']) -> str:
+        """Получает субтитры и структурирует их по таймкодам в зависимости от длины видео."""
+        try:
+            ytt_api = YouTubeTranscriptApi()
+            transcript_list = ytt_api.fetch(video_id, languages=languages)
+            
+            if not transcript_list:
+                raise AppError("Transcript is empty", status_code=400)
+
+            # Определяем общую длительность видео по последнему элементу
+            total_duration = transcript_list[-1].start + transcript_list[-1].duration
+            
+            # Динамически выбираем шаг группировки текста (в секундах)
+            if total_duration < 600:       # Меньше 10 минут
+                interval_step = 60         # Группируем каждую 1 минуту
+            elif total_duration < 1800:    # Меньше 30 минут
+                interval_step = 180        # Группируем каждые 3 минуты
+            else:                          # Большие видео (1 час и более)
+                interval_step = 300        # Группируем каждые 5 минут
+
+            formatted_blocks = []
+            current_interval = interval_step
+            current_block_text = []
+            
+            # Время начала текущего блока
+            block_start_time = 0.0
+
+            for item in transcript_list:
+                clean_text = item.text.replace('\n', ' ').strip()
+                if not clean_text:
+                    continue
+                
+                # Если перешагнули границу интервала, сохраняем блок и начинаем новый
+                if item.start >= current_interval:
+                    if current_block_text:
+                        timestamp = YouTubeService._format_time(block_start_time)
+                        formatted_blocks.append(f"[{timestamp}] {' '.join(current_block_text)}")
+                    
+                    # Смещаем интервал до тех пор, пока он не покроет текущую секунду видео
+                    while current_interval <= item.start:
+                        current_interval += interval_step
+                    
+                    block_start_time = item.start
+                    current_block_text = [clean_text]
+                else:
+                    current_block_text.append(clean_text)
+
+            # Не забываем добавить последний оставшийся кусочек текста
+            if current_block_text:
+                timestamp = YouTubeService._format_time(block_start_time)
+                formatted_blocks.append(f"[{timestamp}] {' '.join(current_block_text)}")
+
+            full_text = "\n".join(formatted_blocks)
+            
+            logger.info(f"Успешно извлечен текст для {video_id}. Блоков: {len(formatted_blocks)}. Длина: {len(full_text)} симв.")
+            return full_text
+            
+        except Exception as e:
+            logger.error(f"Ошибка получения субтитров для {video_id}: {str(e)}")
+            raise AppError("Could not retrieve subtitles for this video. It might not have them or is restricted.", status_code=400)
+
+youtube_service = YouTubeService()
+
+
+=== ФАЙЛ: ./src/services/vector_db.py ===
+import chromadb
+from chromadb.utils import embedding_functions
+from src.core.exceptions import AppError
+from loguru import logger
+from src.core.config import settings
+class VectorDBService:
+    def __init__(self):
+        # Сохраняем базу локально в папку (она создастся автоматически)
+        self.client = chromadb.PersistentClient(path="./chroma_data")
+        
+        # Подключаем Ollama для перевода текста в векторы
+        self.embedding_fn = embedding_functions.OllamaEmbeddingFunction(
+            url=f"{settings.OLLAMA_URL}/api/embeddings",
+            model_name="nomic-embed-text"
+        )
+        
+        # Создаем таблицу (коллекцию) для всех документов
+        self.collection = self.client.get_or_create_collection(
+            name="user_documents",
+            embedding_function=self.embedding_fn
+        )
+
+    def chunk_text(self, text: str, chunk_size: int = 1000, overlap: int = 200) -> list[str]:
+        """
+        Разбивает текст на куски. 
+        overlap (перекрытие) нужен, чтобы мысль не обрывалась на стыке двух кусков.
+        """
+        chunks = []
+        start = 0
+        while start < len(text):
+            end = start + chunk_size
+            chunks.append(text[start:end])
+            start += chunk_size - overlap 
+        return chunks
+
+    def add_document(self, user_id: int, filename: str, text: str):
+        """Режет текст на части и сохраняет их в векторную базу."""
+        logger.info(f"Подготовка документа {filename} для векторной базы...")
+        
+        chunks = self.chunk_text(text)
+        
+        # Генерируем уникальные ID для каждого куска
+        ids = [f"{user_id}_{filename}_{i}" for i in range(len(chunks))]
+        
+        # Метаданные помогут нам потом искать документы конкретного пользователя
+        metadatas = [{"user_id": user_id, "filename": filename} for _ in range(len(chunks))]
+        
+        try:
+            logger.info(f"Отправляем {len(chunks)} чанков в ChromaDB (это займет время)...")
+            self.collection.add(
+                documents=chunks,
+                metadatas=metadatas,
+                ids=ids
+            )
+            logger.success(f"Документ {filename} успешно сохранен в векторную память!")
+        except Exception as e:
+            logger.error(f"Ошибка сохранения в ChromaDB: {e}")
+            raise AppError("Failed to save document to vector DB", status_code=500)
+    def search(self, user_id: int, query: str, n_results: int = 3) -> list[dict]:
+        """
+        Ищет самые релевантные куски текста по смыслу запроса.
+        Строго фильтрует по user_id, чтобы пользователи не читали чужие документы.
+        """
+        logger.info(f"Поиск по документам юзера {user_id}. Запрос: '{query}'")
+        try:
+            results = self.collection.query(
+                query_texts=[query],
+                n_results=n_results,
+                where={"user_id": user_id}  # Защита приватности
+            )
+            
+            formatted_results = []
+            # Проверяем, нашла ли база что-нибудь
+            if results['documents'] and results['documents'][0]:
+                for doc, meta in zip(results['documents'][0], results['metadatas'][0]):
+                    formatted_results.append({
+                        "text": doc,
+                        "filename": meta.get("filename", "Неизвестный файл")
+                    })
+            return formatted_results
+            
+        except Exception as e:
+            logger.error(f"Ошибка поиска в ChromaDB: {e}")
+            return []
+
+
+vector_db = VectorDBService()
+
+
+=== ФАЙЛ: ./src/services/user_service.py ===
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.models.user import User, Profile
+from src.schemas.user import UserCreate
+from src.core.security import get_password_hash
+from src.repositories.user_repo import user_repository
+from src.core.exceptions import AppError
+from loguru import logger
+
+async def create_user(db: AsyncSession, user_data: UserCreate) -> User:
+    logger.info(f"Попытка регистрации: {user_data.email}")
+    
+    # Проверяем пользователя через репозиторий
+    existing_user = await user_repository.get_by_email(db, user_data.email)
+    if existing_user:
+        logger.warning(f"Ошибка регистрации: Email {user_data.email} уже занят")
+        raise AppError("Email already registered", status_code=400)
+    
+    hashed_pw = get_password_hash(user_data.password)
+    user_dict = {"email": user_data.email, "hashed_password": hashed_pw}
+    
+    # Создаем пользователя через репозиторий
+    new_user = await user_repository.create(db, user_dict)
+    
+    # Создаем профиль
+    new_profile = Profile(
+        user_id=new_user.id,
+        first_name=user_data.first_name,
+        last_name=user_data.last_name
+    )
+    db.add(new_profile)
+    await db.commit()
+    
+    logger.success(f"Пользователь успешно создан: {new_user.email}")
+    return new_user
+
+async def get_user_by_email(db: AsyncSession, email: str) -> User | None:
+    return await user_repository.get_by_email(db, email)
+
+
+=== ФАЙЛ: ./src/services/search.py ===
+import httpx
+from src.core.config import settings
+from src.core.exceptions import AppError
+from loguru import logger
+
+class WebSearchService:
+    @staticmethod
+    async def search(query: str, max_results: int = 4) -> str:
+        """
+        Ищет информацию в интернете через официальный API Tavily.
+        """
+        logger.info(f"Запрос в Tavily AI по теме: '{query}'")
+        
+        url = "https://api.tavily.com/search"
+        payload = {
+            "api_key": settings.TAVILY_API_KEY,
+            "query": query,
+            "max_results": max_results,
+            "include_answer": False # Tavily сам умеет делать краткую выжимку
+        }
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, json=payload, timeout=15.0)
+                
+                if response.status_code != 200:
+                    logger.error(f"Ошибка Tavily API: {response.text}")
+                    raise AppError("Failed to fetch search results from Tavily", status_code=500)
+                    
+                data = response.json()
+                results = data.get("results", [])
+                ai_summary = data.get("answer", "")
+                
+                if not results and not ai_summary:
+                    logger.warning(f"Tavily ничего не нашел по запросу: {query}")
+                    return "Нет данных в интернете."
+
+                # Формируем красивый контекст из результатов Tavily
+                formatted_results = []
+                if ai_summary:
+                    formatted_results.append(f"Общая выжимка от поисковика:\n{ai_summary}\n")
+                    
+                for idx, res in enumerate(results):
+                    title = res.get('title', 'Без заголовка')
+                    content = res.get('content', '')
+                    url_source = res.get('url', '')
+                    formatted_results.append(f"[{idx + 1}] {title}\nИсточник: {url_source}\n{content}")
+                    
+                final_text = "\n\n".join(formatted_results)
+                logger.success(f"Tavily успешно нашел {len(results)} источников для '{query}'")
+                return final_text
+
+        except Exception as e:
+            logger.error(f"Ошибка при запросе к Tavily: {e}")
+            raise AppError("Search service internal error", status_code=500)
+
+web_search = WebSearchService()
+
+
+=== ФАЙЛ: ./src/services/document_parser.py ===
+import tempfile
+import os
+import shutil
+import fitz  # PyMuPDF
+import docx  # python-docx
+from fastapi import UploadFile
+from src.core.exceptions import AppError
+from loguru import logger
+
+class DocumentParserService:
+    @staticmethod
+    async def parse(file: UploadFile) -> str:
+        """Извлекает текст, сохраняя файл на диск во временную директорию (защита RAM)."""
+        logger.info(f"Начинаем парсинг файла: {file.filename}")
+        ext = file.filename.split('.')[-1].lower() if '.' in file.filename else ''
+        
+        # Создаем временный файл
+        fd, temp_path = tempfile.mkstemp(suffix=f".{ext}")
+        
+        try:
+            # Стримим загружаемый файл прямо на диск
+            with os.fdopen(fd, 'wb') as tmp:
+                shutil.copyfileobj(file.file, tmp)
+
+            # Парсим в зависимости от формата, читая уже с диска
+            if ext == 'txt':
+                with open(temp_path, 'r', encoding='utf-8') as f:
+                    return f.read().strip()
+                    
+            elif ext == 'pdf':
+                text = ""
+                with fitz.open(temp_path) as doc:
+                    for page in doc:
+                        text += page.get_text() + "\n"
+                return text.strip()
+                
+            elif ext == 'docx':
+                doc = docx.Document(temp_path)
+                return "\n".join([para.text for para in doc.paragraphs]).strip()
+                
+            else:
+                logger.error(f"Неподдерживаемый формат файла: {ext}")
+                raise AppError(f"Формат .{ext} пока не поддерживается. Загрузите PDF, DOCX или TXT.", status_code=400)
+                
+        except AppError:
+            raise
+        except Exception as e:
+            logger.error(f"Ошибка при извлечении текста из {file.filename}: {str(e)}")
+            raise AppError("Failed to parse document content", status_code=500)
+        finally:
+            # Всегда закрываем и удаляем временный файл, освобождая диск
+            await file.seek(0)
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+
+document_parser = DocumentParserService()
+
+
+=== ФАЙЛ: ./src/services/document_parser.py ===
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Устанавливаем системные зависимости, включая сборщику для компиляции пакетов
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Обновляем pip до актуальной версии внутри контейнера
+RUN pip install --no-cache-dir --upgrade pip
+
+# Сначала копируем только requirements.txt, чтобы Docker кэшировал зависимости
+COPY requirements.txt .
+
+# Устанавливаем зависимости
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем остальной код проекта
+COPY . .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+
+

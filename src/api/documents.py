@@ -8,10 +8,12 @@ from src.core.exceptions import AppError
 from src.schemas.documents import DocumentAskRequest, DocumentAskResponse
 from loguru import logger
 from src.api.deps import RateLimiter
+from src.core.config import settings
+
 router = APIRouter(prefix="/documents", tags=["Documents AI"])
 
-OLLAMA_GENERATE_URL = "http://host.docker.internal:11434/api/generate"
-MODEL_NAME = "llama3.1"
+# Добавил .rstrip('/') чтобы избежать ошибки с двойным слэшем
+OLLAMA_GENERATE_URL = f"{settings.OLLAMA_URL.rstrip('/')}/api/generate"
 
 @router.post("/upload", dependencies=[Depends(RateLimiter(times=3, seconds=60))])
 async def upload_document(
@@ -44,13 +46,18 @@ async def ask_document(
 ):
     logger.info(f"Юзер {current_user.email} задал вопрос по документам: '{request.question}'")
     
-    # 1. Ищем релевантные куски в ChromaDB (берем топ-4 самых подходящих абзаца)
-    search_results = vector_db.search(user_id=current_user.id, query=request.question, n_results=4)
+    # 1. Ищем релевантные куски в ChromaDB (ЗДЕСЬ ДОБАВЛЕН ФИЛЬТР ПО ФАЙЛУ!)
+    search_results = vector_db.search(
+        user_id=current_user.id, 
+        query=request.question,
+        filename=request.filename,  # <--- Теперь база ищет СТРОГО в нужном файле
+        n_results=4
+    )
     
     if not search_results:
         return DocumentAskResponse(
             question=request.question,
-            answer="Я не нашла ответ на этот вопрос в ваших загруженных документах.",
+            answer="Я не нашла ответ на этот вопрос в указанном документе.",
             sources=[]
         )
 
@@ -73,7 +80,7 @@ async def ask_document(
         async with httpx.AsyncClient() as client:
             resp = await client.post(
                 OLLAMA_GENERATE_URL, 
-                json={"model": MODEL_NAME, "prompt": prompt, "stream": False},
+                json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
                 timeout=60.0
             )
             

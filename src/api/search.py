@@ -10,11 +10,11 @@ from src.models.user import User
 from src.core.exceptions import AppError
 from loguru import logger
 from src.api.deps import RateLimiter
+from src.core.config import settings
 
 router = APIRouter(prefix="/search", tags=["Internet AI"])
 
-OLLAMA_GENERATE_URL = "http://host.docker.internal:11434/api/generate"
-MODEL_NAME = "llama3.1"
+OLLAMA_GENERATE_URL = f"{settings.OLLAMA_URL}/api/generate"
 
 @router.post("/", response_model=WebSearchResponse, dependencies=[Depends(RateLimiter(times=3, seconds=60))])
 async def web_search_ai(request: WebSearchRequest, current_user: User = Depends(get_current_user)):
@@ -37,7 +37,7 @@ async def web_search_ai(request: WebSearchRequest, current_user: User = Depends(
         async with httpx.AsyncClient() as client:
             resp = await client.post(
                 OLLAMA_GENERATE_URL, 
-                json={"model": MODEL_NAME, "prompt": prompt, "stream": False},
+                json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
                 timeout=60.0 
             )
             

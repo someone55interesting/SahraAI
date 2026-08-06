@@ -1,6 +1,8 @@
-import io
-import fitz  # PyMuPDF для PDF
-import docx  # для DOCX
+import tempfile
+import os
+import shutil
+import fitz  # PyMuPDF
+import docx  # python-docx
 from fastapi import UploadFile
 from src.core.exceptions import AppError
 from loguru import logger
@@ -8,31 +10,32 @@ from loguru import logger
 class DocumentParserService:
     @staticmethod
     async def parse(file: UploadFile) -> str:
-        """Извлекает текст из загруженного файла в зависимости от его формата."""
+        """Извлекает текст, сохраняя файл на диск во временную директорию (защита RAM)."""
         logger.info(f"Начинаем парсинг файла: {file.filename}")
-        
-        # Считываем файл в оперативную память
-        content = await file.read()
-        
-        # Получаем расширение файла (например, pdf, docx, txt)
         ext = file.filename.split('.')[-1].lower() if '.' in file.filename else ''
-
+        
+        # Создаем временный файл
+        fd, temp_path = tempfile.mkstemp(suffix=f".{ext}")
+        
         try:
+            # Стримим загружаемый файл прямо на диск
+            with os.fdopen(fd, 'wb') as tmp:
+                shutil.copyfileobj(file.file, tmp)
+
+            # Парсим в зависимости от формата, читая уже с диска
             if ext == 'txt':
-                return content.decode('utf-8')
-                
+                with open(temp_path, 'r', encoding='utf-8') as f:
+                    return f.read().strip()
+                    
             elif ext == 'pdf':
                 text = ""
-                # fitz работает с байтами через stream
-                with fitz.open(stream=content, filetype="pdf") as doc:
+                with fitz.open(temp_path) as doc:
                     for page in doc:
                         text += page.get_text() + "\n"
                 return text.strip()
                 
             elif ext == 'docx':
-                # python-docx работает с файлоподобными объектами
-                doc_file = io.BytesIO(content)
-                doc = docx.Document(doc_file)
+                doc = docx.Document(temp_path)
                 return "\n".join([para.text for para in doc.paragraphs]).strip()
                 
             else:
@@ -45,7 +48,9 @@ class DocumentParserService:
             logger.error(f"Ошибка при извлечении текста из {file.filename}: {str(e)}")
             raise AppError("Failed to parse document content", status_code=500)
         finally:
-            # Возвращаем указатель файла в начало (на случай, если файл понадобится где-то еще)
+            # Всегда закрываем и удаляем временный файл, освобождая диск
             await file.seek(0)
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
 
 document_parser = DocumentParserService()
