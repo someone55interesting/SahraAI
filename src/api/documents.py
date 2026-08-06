@@ -9,7 +9,7 @@ from src.schemas.documents import DocumentAskRequest, DocumentAskResponse
 from loguru import logger
 from src.api.deps import RateLimiter
 from src.core.config import settings
-
+import traceback 
 router = APIRouter(prefix="/documents", tags=["Documents AI"])
 
 # Добавил .rstrip('/') чтобы избежать ошибки с двойным слэшем
@@ -81,7 +81,7 @@ async def ask_document(
             resp = await client.post(
                 OLLAMA_GENERATE_URL, 
                 json={"model": settings.OLLAMA_MODEL, "prompt": prompt, "stream": False},
-                timeout=60.0
+                timeout=180.0
             )
             
             if resp.status_code != 200:
@@ -96,6 +96,10 @@ async def ask_document(
                 sources=unique_sources
             )
             
-    except Exception as e:
-        logger.error(f"Ошибка генерации ответа: {e}")
-        raise AppError("Failed to generate answer from documents", status_code=500)
+    except Exception:
+        logger.exception("Ошибка генерации ответа")
+        traceback.print_exc()
+    raise AppError(
+        "Failed to generate answer from documents",
+        status_code=500
+    )
