@@ -42,7 +42,7 @@
             if (!token) return;
 
             // conversation_id = 0 означает создание нового чата
-            ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws/0?token=${token}`);
+            ws = new WebSocket(`ws://31.129.98.168:8000/chat/ws/0?token=${token}`);
 
             ws.onopen = () => {
                 appendMessage('system', 'Соединение установлено. Sahra AI готова.');

@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import redis.asyncio as redis
-
+from fastapi.middleware.cors import CORSMiddleware
 from src.core.exceptions import AppError, app_error_handler
 from src.core.config import settings
 from src.api import auth, chat, memory, youtube, search, documents, tasks
@@ -29,7 +29,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Подключаем глобальные обработчики исключений и роутеры
 app.add_exception_handler(AppError, app_error_handler)
 app.include_router(auth.router)
